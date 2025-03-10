@@ -1,0 +1,6 @@
+- [ ] fix the frontend data
+- [ ] fix the theme changing button
+- [ ] deploy to the AWS amplify
+- [ ] add the .env for the backend
+- [ ] connect to neon db
+- [ ] add the backend to the amplify
