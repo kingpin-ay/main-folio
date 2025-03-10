@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Github, Linkedin, Twitter } from "lucide-react"
-import Link from "next/link"
+import { motion } from "motion/react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Github, Linkedin, Twitter } from "lucide-react";
+import Link from "next/link";
 
 export default function Landing() {
   return (
@@ -19,12 +19,13 @@ export default function Landing() {
         >
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl mb-6">
             <span className="block">Hi, I'm </span>
-            <span className="block text-primary">John Doe</span>
+            <span className="block text-primary">Ayush Mondal</span>
           </h1>
 
           <p className="mt-6 text-xl text-muted-foreground max-w-2xl mx-auto">
-            A passionate full-stack developer specializing in building exceptional digital experiences that are fast,
-            accessible, and responsive.
+            A passionate full-stack developer specializing in building
+            exceptional digital experiences that are fast, accessible, and
+            responsive.
           </p>
 
           <div className="mt-10 flex flex-wrap justify-center gap-4">
@@ -40,17 +41,32 @@ export default function Landing() {
 
           <div className="mt-12 flex justify-center gap-6">
             <Button variant="ghost" size="icon" asChild>
-              <Link href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <Link
+                href="https://github.com/kingpin-ay"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+              >
                 <Github className="h-6 w-6" />
               </Link>
             </Button>
             <Button variant="ghost" size="icon" asChild>
-              <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <Link
+                href="https://www.linkedin.com/in/ayush-mondal-a13023205/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
                 <Linkedin className="h-6 w-6" />
               </Link>
             </Button>
             <Button variant="ghost" size="icon" asChild>
-              <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <Link
+                href="https://x.com/_Ayush_01"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+              >
                 <Twitter className="h-6 w-6" />
               </Link>
             </Button>
@@ -58,6 +74,5 @@ export default function Landing() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }
-

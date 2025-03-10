@@ -1,33 +1,36 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { motion } from "motion/react";
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const techStack = {
   frontend: [
-    { name: "React", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "Next.js", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "TypeScript", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "Tailwind CSS", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "Framer Motion", icon: "/placeholder.svg?height=60&width=60" },
+    { name: "React", icon: "/icon-svg/react.svg?height=60&width=60" },
+    { name: "Next.js", icon: "/icon-svg/next-js.svg?height=60&width=60" },
+    { name: "TypeScript", icon: "/icon-svg/typescript.svg?height=60&width=60" },
+    { name: "Tailwind CSS", icon: "/icon-svg/tailwind.svg?height=60&width=60" },
+    {
+      name: "Motion",
+      icon: "https://framerusercontent.com/images/3aQX5dnH5Yqgsn98QXKF2ZXxIE.png",
+    },
   ],
   backend: [
-    { name: "Node.js", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "Express", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "MongoDB", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "PostgreSQL", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "GraphQL", icon: "/placeholder.svg?height=60&width=60" },
+    { name: "Node.js", icon: "/icon-svg/nodejs.svg?height=60&width=60" },
+    { name: "Express", icon: "/icon-svg/express.svg?height=60&width=60" },
+    { name: "MongoDB", icon: "/icon-svg/mongodb.svg?height=60&width=60" },
+    { name: "PostgreSQL", icon: "/icon-svg/postgresql.svg?height=60&width=60" },
+    { name: "GraphQL", icon: "/icon-svg/graphql.svg?height=60&width=60" },
   ],
   tools: [
-    { name: "Git", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "Docker", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "VS Code", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "Figma", icon: "/placeholder.svg?height=60&width=60" },
-    { name: "AWS", icon: "/placeholder.svg?height=60&width=60" },
+    { name: "Git", icon: "/icon-svg/git.svg?height=60&width=60" },
+    { name: "Docker", icon: "/icon-svg/docker.svg?height=60&width=60" },
+    { name: "VS Code", icon: "/icon-svg/vs-code.svg?height=60&width=60" },
+    { name: "AWS", icon: "/icon-svg/aws.svg?height=60&width=60" },
+    { name: "Github", icon: "/icon-svg/github.svg?height=60&width=60" },
   ],
-}
+};
 
 export default function About() {
   return (
@@ -40,7 +43,9 @@ export default function About() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">About Me</h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
+            About Me
+          </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Get to know me and the technologies I work with.
           </p>
@@ -56,11 +61,11 @@ export default function About() {
             <div className="relative mx-auto lg:mx-0 max-w-md">
               <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-primary/20 to-primary/40 blur-md" />
               <Image
-                src="/placeholder.svg?height=500&width=500"
+                src="/my-picture/me.jpg"
                 alt="Profile"
                 width={500}
                 height={500}
-                className="relative rounded-lg object-cover"
+                className="relative rounded-lg object-cover w-[500px] h-[500px]"
               />
             </div>
           </motion.div>
@@ -72,18 +77,21 @@ export default function About() {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold">Hi there! I'm John Doe</h3>
+            <h3 className="text-2xl font-bold">Hi there! I'm Ayush Mondal</h3>
             <p className="text-muted-foreground">
-              I'm a passionate full-stack developer with over 5 years of experience building web applications. I
-              specialize in creating responsive, accessible, and performant web experiences using modern technologies.
+              I'm a passionate full-stack developer with over 5 years of
+              experience building web applications. I specialize in creating
+              responsive, accessible, and performant web experiences using
+              modern technologies.
             </p>
             <p className="text-muted-foreground">
-              My journey in web development started when I built my first website at the age of 16. Since then, I've
-              worked with various startups and established companies to bring their ideas to life.
+              My journey in web development started when I built my first
+              website at the age of 18. Since then, I've worked with various
+              startups and established companies to bring their ideas to life.
             </p>
             <p className="text-muted-foreground">
-              When I'm not coding, you can find me hiking, reading sci-fi novels, or experimenting with new recipes in
-              the kitchen.
+              When I'm not coding, you can find me hiking, reading sci-fi
+              novels, or experimenting with new recipes in the kitchen.
             </p>
           </motion.div>
         </div>
@@ -124,7 +132,9 @@ export default function About() {
                             height={60}
                             className="mb-4"
                           />
-                          <span className="font-medium text-center">{tech.name}</span>
+                          <span className="font-medium text-center">
+                            {tech.name}
+                          </span>
                         </CardContent>
                       </Card>
                     </motion.div>
@@ -136,6 +146,5 @@ export default function About() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }
-

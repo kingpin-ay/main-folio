@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -82,7 +82,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-medium">Email</h4>
-                      <p className="text-sm text-muted-foreground">hello@example.com</p>
+                      <p className="text-sm text-muted-foreground">ayushmondal001@gmail.com</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -94,7 +94,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-medium">Phone</h4>
-                      <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                      <p className="text-sm text-muted-foreground">+91 9800994371</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -106,7 +106,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-medium">Location</h4>
-                      <p className="text-sm text-muted-foreground">San Francisco, CA</p>
+                      <p className="text-sm text-muted-foreground">Kolkata , West Bengal</p>
                     </div>
                   </CardContent>
                 </Card>

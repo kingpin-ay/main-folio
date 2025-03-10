@@ -4,3 +4,4 @@
 - [ ] add the .env for the backend
 - [ ] connect to neon db
 - [ ] add the backend to the amplify
+- [ ] fix the theme changing issue
