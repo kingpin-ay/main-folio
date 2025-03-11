@@ -19,11 +19,14 @@ jobs:
         with:
           node-version: 22  # You can change this to the desired Node.js version
 
+      - name: Install pnpm
+        run: npm install --global corepack@latest
+      
       - name: Navigate to the frontend
-        run: cd frontend/
+        run: pwd && cd frontend/
       
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Run Build
-        run: npm run build
+        run: pnpm run build
