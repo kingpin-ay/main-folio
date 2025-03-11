@@ -4,12 +4,15 @@ on:
   push:
     branches:
       - "develop"
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: 
+    container:
       image: node:22
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -17,14 +20,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22  # You can change this to the desired Node.js version
+          node-version: 22 # You can change this to the desired Node.js version
 
       - name: Install pnpm
         run: npm install --global corepack@latest
-      
-      - name: Navigate to the frontend
-        run: pwd && cd frontend/
-      
+
       - name: Install Dependencies
         run: pnpm install
 
