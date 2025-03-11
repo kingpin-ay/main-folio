@@ -1,0 +1,29 @@
+name: Build check for the frontend
+run-name: ${{ github.actor }} is testing out Build Actions 🚀
+on:
+  push:
+    branches:
+      - "develop"
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: 
+      image: node:22
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22  # You can change this to the desired Node.js version
+
+      - name: Navigate to the frontend
+        run: cd frontend/
+      
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Build
+        run: npm run build
