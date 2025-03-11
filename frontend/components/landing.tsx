@@ -18,7 +18,7 @@ export default function Landing() {
           className="max-w-3xl mx-auto px-4 sm:px-6"
         >
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl mb-6">
-            <span className="block">Hi, I'm </span>
+            <span className="block">{`Hi, I'm`} </span>
             <span className="block text-primary">Ayush Mondal</span>
           </h1>
 

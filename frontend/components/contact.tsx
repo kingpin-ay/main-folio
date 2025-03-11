@@ -77,8 +77,8 @@ export default function Contact() {
             <div className="space-y-8">
               <h3 className="text-2xl font-bold">Get in Touch</h3>
               <p className="text-muted-foreground">
-                I'm always open to discussing new projects, creative ideas, or
-                opportunities to be part of your vision.
+                {`I'm always open to discussing new projects, creative ideas, or
+                opportunities to be part of your vision.`}
               </p>
 
               <div className="space-y-4">

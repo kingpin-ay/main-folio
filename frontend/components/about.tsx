@@ -77,21 +77,21 @@ export default function About() {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold">Hi there! I'm Ayush Mondal</h3>
+            <h3 className="text-2xl font-bold">{`Hi there! I'm Ayush Mondal`}</h3>
             <p className="text-muted-foreground">
-              I'm a passionate full-stack developer with over 5 years of
+              {`I'm a passionate full-stack developer with over 5 years of
               experience building web applications. I specialize in creating
               responsive, accessible, and performant web experiences using
-              modern technologies.
+              modern technologies.`}
             </p>
             <p className="text-muted-foreground">
-              My journey in web development started when I built my first
+              {`My journey in web development started when I built my first
               website at the age of 18. Since then, I've worked with various
-              startups and established companies to bring their ideas to life.
+              startups and established companies to bring their ideas to life.`}
             </p>
             <p className="text-muted-foreground">
-              When I'm not coding, you can find me hiking, reading sci-fi
-              novels, or experimenting with new recipes in the kitchen.
+              {`When I'm not coding, you can find me hiking, reading sci-fi
+              novels, or experimenting with new recipes in the kitchen.`}
             </p>
           </motion.div>
         </div>
