@@ -1,0 +1,20 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - curl -fsSL https://get.pnpm.io/install.sh | sh  # Install pnpm
+        - export PATH=$HOME/.local/share/pnpm:$PATH       # Ensure pnpm is in PATH
+        - corepack enable pnpm                            # Enable pnpm
+        - pnpm install --frozen-lockfile
+    build:
+      commands:
+        - pnpm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*
