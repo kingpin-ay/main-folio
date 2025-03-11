@@ -1,18 +1,26 @@
-"use client"
+"use client";
 
-import { motion } from "motion/react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ExternalLink, Github } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+import { motion } from "motion/react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, Github } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 const projects = [
   {
     id: 1,
     title: "E-Commerce Platform",
-    description: "A full-stack e-commerce platform with payment integration, user authentication, and admin dashboard.",
+    description:
+      "A full-stack e-commerce platform with payment integration, user authentication, and admin dashboard.",
     image: "/placeholder.svg?height=300&width=500",
     tags: ["React", "Node.js", "MongoDB", "Stripe"],
     liveUrl: "#",
@@ -21,7 +29,8 @@ const projects = [
   {
     id: 2,
     title: "Task Management App",
-    description: "A collaborative task management application with real-time updates and team workspaces.",
+    description:
+      "A collaborative task management application with real-time updates and team workspaces.",
     image: "/placeholder.svg?height=300&width=500",
     tags: ["Next.js", "TypeScript", "Prisma", "Tailwind CSS"],
     liveUrl: "#",
@@ -30,18 +39,19 @@ const projects = [
   {
     id: 3,
     title: "AI Content Generator",
-    description: "An AI-powered application that generates content based on user prompts and preferences.",
+    description:
+      "An AI-powered application that generates content based on user prompts and preferences.",
     image: "/placeholder.svg?height=300&width=500",
     tags: ["Python", "React", "OpenAI API", "FastAPI"],
     liveUrl: "#",
     githubUrl: "#",
   },
-]
+];
 
 export default function Projects() {
   return (
     <div className="py-20 bg-muted/50">
-      <div className="container">
+      <div className="container px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -49,7 +59,9 @@ export default function Projects() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">Projects</h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
+            Projects
+          </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             A selection of my recent work and personal projects.
           </p>
@@ -89,12 +101,20 @@ export default function Projects() {
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline" size="sm" asChild>
-                    <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                    <Link
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <Github className="mr-2 h-4 w-4" /> Code
                     </Link>
                   </Button>
                   <Button size="sm" asChild>
-                    <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                    <Link
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ExternalLink className="mr-2 h-4 w-4" /> Demo
                     </Link>
                   </Button>
@@ -105,6 +125,5 @@ export default function Projects() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

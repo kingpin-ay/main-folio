@@ -35,7 +35,7 @@ const techStack = {
 export default function About() {
   return (
     <div className="py-20 bg-muted/50">
-      <div className="container">
+      <div className="container px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -1,5 +1,5 @@
-import Link from "next/link"
-import { Github, Linkedin, Mail, Twitter } from "lucide-react"
+import Link from "next/link";
+import { Github, Linkedin, Mail, Twitter } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -10,13 +10,13 @@ export default function Footer() {
             Portfolio
           </Link>
           <p className="text-center text-sm text-muted-foreground md:text-left">
-            &copy; {new Date().getFullYear()} John Doe. All rights reserved.
+            &copy; {new Date().getFullYear()} Ayush Mondal. All rights reserved.
           </p>
         </div>
 
         <div className="flex gap-4">
           <Link
-            href="https://github.com"
+            href="https://github.com/kingpin-ay"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -25,7 +25,7 @@ export default function Footer() {
             <Github className="h-5 w-5" />
           </Link>
           <Link
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/ayush-mondal-a13023205/"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -34,7 +34,7 @@ export default function Footer() {
             <Linkedin className="h-5 w-5" />
           </Link>
           <Link
-            href="https://twitter.com"
+            href="https://x.com/_Ayush_01"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -43,7 +43,7 @@ export default function Footer() {
             <Twitter className="h-5 w-5" />
           </Link>
           <Link
-            href="mailto:hello@example.com"
+            href="mailto:ayushmondal001@gmail.com"
             className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
             aria-label="Email"
           >
@@ -52,6 +52,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }
-

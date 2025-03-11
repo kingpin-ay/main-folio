@@ -1,18 +1,26 @@
-"use client"
+"use client";
 
-import { motion } from "motion/react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Calendar } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+import { motion } from "motion/react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Calendar } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 const blogs = [
   {
     id: 1,
     title: "Building Responsive UIs with Tailwind CSS",
-    description: "Learn how to create beautiful, responsive user interfaces using Tailwind CSS utility classes.",
+    description:
+      "Learn how to create beautiful, responsive user interfaces using Tailwind CSS utility classes.",
     image: "/placeholder.svg?height=250&width=500",
     date: "May 15, 2023",
     category: "Web Development",
@@ -22,7 +30,8 @@ const blogs = [
   {
     id: 2,
     title: "Getting Started with Next.js 14",
-    description: "Explore the new features and improvements in Next.js 14 and how to leverage them in your projects.",
+    description:
+      "Explore the new features and improvements in Next.js 14 and how to leverage them in your projects.",
     image: "/placeholder.svg?height=250&width=500",
     date: "June 22, 2023",
     category: "JavaScript",
@@ -40,12 +49,12 @@ const blogs = [
     readTime: "6 min read",
     url: "#",
   },
-]
+];
 
 export default function Blogs() {
   return (
     <div className="py-20">
-      <div className="container">
+      <div className="container px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -53,7 +62,9 @@ export default function Blogs() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">Blog Posts</h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
+            Blog Posts
+          </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Thoughts, tutorials, and insights on web development and technology.
           </p>
@@ -112,6 +123,5 @@ export default function Blogs() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

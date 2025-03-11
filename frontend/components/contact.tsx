@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { motion } from "motion/react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent } from "@/components/ui/card"
-import { Mail, MapPin, Phone, Send } from "lucide-react"
+import { useState } from "react";
+import { motion } from "motion/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { Mail, MapPin, Phone, Send } from "lucide-react";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -16,21 +16,23 @@ export default function Contact() {
     email: "",
     subject: "",
     message: "",
-  })
+  });
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Reset form
     setFormData({
@@ -38,16 +40,16 @@ export default function Contact() {
       email: "",
       subject: "",
       message: "",
-    })
-    setIsSubmitting(false)
+    });
+    setIsSubmitting(false);
 
     // Here you would typically send the form data to your backend
-    console.log("Form submitted:", formData)
-  }
+    console.log("Form submitted:", formData);
+  };
 
   return (
     <div className="py-20">
-      <div className="container">
+      <div className="container px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -55,9 +57,12 @@ export default function Contact() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">Contact Me</h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
+            Contact Me
+          </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Have a project in mind or just want to say hello? Feel free to reach out!
+            Have a project in mind or just want to say hello? Feel free to reach
+            out!
           </p>
         </motion.div>
 
@@ -67,11 +72,13 @@ export default function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
+            className="space-y-8"
           >
             <div className="space-y-8">
               <h3 className="text-2xl font-bold">Get in Touch</h3>
               <p className="text-muted-foreground">
-                I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+                I'm always open to discussing new projects, creative ideas, or
+                opportunities to be part of your vision.
               </p>
 
               <div className="space-y-4">
@@ -82,7 +89,9 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-medium">Email</h4>
-                      <p className="text-sm text-muted-foreground">ayushmondal001@gmail.com</p>
+                      <p className="text-sm text-muted-foreground">
+                        ayushmondal001@gmail.com
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -94,7 +103,9 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-medium">Phone</h4>
-                      <p className="text-sm text-muted-foreground">+91 9800994371</p>
+                      <p className="text-sm text-muted-foreground">
+                        +91 9800994371
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -106,7 +117,9 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-medium">Location</h4>
-                      <p className="text-sm text-muted-foreground">Kolkata , West Bengal</p>
+                      <p className="text-sm text-muted-foreground">
+                        Kolkata, West Bengal , IN
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -181,7 +194,11 @@ export default function Contact() {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
                     {isSubmitting ? (
                       <>Sending...</>
                     ) : (
@@ -197,6 +214,5 @@ export default function Contact() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
