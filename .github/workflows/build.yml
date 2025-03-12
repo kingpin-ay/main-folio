@@ -20,18 +20,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22
-          cache: 'pnpm'
-          cache-dependency-path: './frontend/pnpm-lock.yaml'
+          node-version: 22 # You can change this to the desired Node.js version
 
       - name: Install pnpm
         run: npm install --global corepack@latest
 
-      - name: Enable pnpm
-        run: corepack enable
-
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Run Build
         run: pnpm run build
@@ -49,17 +44,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
-          cache-dependency-path: './backend/pnpm-lock.yaml'
       
       - name: Install pnpm
         run: npm install --global corepack@latest
 
-      - name: Enable pnpm
-        run: corepack enable
-
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Build
         run: pnpm run build
