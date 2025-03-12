@@ -6,9 +6,17 @@ on:
       - main
     paths:
       - 'backend/**'
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - 'backend/**'
 
 jobs:
   deploy:
+    # Only run this job if the PR was merged or it's a direct push to main
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     defaults:
       run:
