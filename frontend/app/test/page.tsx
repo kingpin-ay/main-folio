@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import { useEffect } from "react";
 
 function page() {
   const checkCall = async () => {
@@ -14,7 +15,7 @@ function page() {
     console.log("response check for the hono-lambda -> ", result.body, result);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     checkCall();
   }, []);
   return <div>page</div>;
