@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 
-function page() {
+function Test() {
   const checkCall = async () => {
     const result = await fetch(
       "https://2r5ixl6xr9.execute-api.ap-south-1.amazonaws.com/default/health",
@@ -21,4 +21,4 @@ function page() {
   return <div>page</div>;
 }
 
-export default page;
+export default Test;
