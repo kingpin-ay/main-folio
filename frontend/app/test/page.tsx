@@ -4,7 +4,7 @@ import { useEffect } from "react";
 function Test() {
   const checkCall = async () => {
     const result = await fetch(
-      "https://2r5ixl6xr9.execute-api.ap-south-1.amazonaws.com/default/health",
+      "https://2r5ixl6xr9.execute-api.ap-south-1.amazonaws.com/default/hono-portfolio-backend/",
       {
         method: "GET",
         headers: {
