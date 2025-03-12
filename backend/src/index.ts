@@ -9,5 +9,8 @@ app.get("/", (c) => {
 app.get("/health", (c) => {
   return c.text("ok");
 });
+app.get("/issue_checker", (c) => {
+  return c.text("ok");
+});
 
 export const handler = handle(app);
