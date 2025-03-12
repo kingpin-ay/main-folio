@@ -10,6 +10,7 @@ function Test() {
         headers: {
           "Content-Type": "application/json",
         },
+        mode: "cors", // Ensure CORS is enabled
       }
     );
     console.log("response check for the hono-lambda -> ", result.body, result);
