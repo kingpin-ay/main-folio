@@ -1,4 +1,4 @@
-name: Build check for the frontend
+name: Build check for the frontend and backend
 run-name: ${{ github.actor }} is testing out Build Actions 🚀
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - "develop"
 
 jobs:
-  build:
+  frontend-build:
     runs-on: ubuntu-latest
     container:
       image: node:22
@@ -29,4 +29,27 @@ jobs:
         run: pnpm install
 
       - name: Run Build
+        run: pnpm run build
+
+  backend-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      
+      - name: Install pnpm
+        run: npm install --global corepack@latest
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build
         run: pnpm run build
