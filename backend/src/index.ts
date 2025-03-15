@@ -5,15 +5,8 @@ import { cors } from "hono/cors";
 const app = new Hono().basePath("/default");
 
 app.use(
-  "*",
-  cors({
-    origin: "https://main.d3s09nbx3p1m4t.amplifyapp.com",
-    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowHeaders: ["Content-Type", "Authorization"],
-    exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
-    credentials: true,
-    maxAge: 86400,
-  })
+  "https://main.d3s09nbx3p1m4t.amplifyapp.com",
+  cors()
 );
 
 app.get("/", (c) => {
