@@ -19,7 +19,7 @@ app.use(
 app.get("/", (c) => {
   return c.text(`Hello hono! ${c.req.path}`, 200);
 });
-app.get("/check", (c) => {
+app.get("/*", (c) => {
   return c.text(`Hello hono! ${c.req.path}`, 200);
 });
 
