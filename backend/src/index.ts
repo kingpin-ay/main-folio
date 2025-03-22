@@ -9,7 +9,7 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>().basePath("/default");
 
-app.use("https://main.d3s09nbx3p1m4t.amplifyapp.com/", cors());
+app.use("*", cors());
 
 app.get("/", (c) => {
   return c.text(`Hello hono! ${c.req.path}`, 200);

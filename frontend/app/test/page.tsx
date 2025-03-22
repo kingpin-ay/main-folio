@@ -1,4 +1,5 @@
 "use client";
+import { appClient } from "@/lib/client.ts/appClient";
 import axios from "axios";
 import { useState } from "react";
 
@@ -6,23 +7,15 @@ function Test() {
   const [mainData, setMainData] = useState("");
   const [mainData2, setMainData2] = useState("");
   const checkCall = async () => {
-    const result = await axios.get(
-      `https://p04ytf3xrh.execute-api.ap-south-1.amazonaws.com/default/update`
-    );
-    console.log(result.data);
-    setMainData(result.data);
-  };
-
-  const checkCall1 = async () => {
-    const result = await axios.get(
-      `https://p04ytf3xrh.execute-api.ap-south-1.amazonaws.com/default`
-    );
-    console.log(result.data);
-    setMainData2(`${result.data} + /update`);
+    const result = await appClient.checkHealth();
+    if (result.status === 200) {
+      setMainData(result.message);
+      setMainData2(result.data);
+    }
   };
 
   checkCall();
-  checkCall1();
+
   return (
     <div>
       <div>{mainData}</div>
