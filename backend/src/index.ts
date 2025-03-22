@@ -9,6 +9,7 @@ app.use("*", cors());
 app.get("/", (c) => {
   return c.text(`Hello hono! ${c.req.path}`, 200);
 });
+
 app.get("/*", (c) => {
   return c.text(`Hello hono starting point! ${c.req.path}`, 200);
 });
