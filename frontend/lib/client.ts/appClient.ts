@@ -30,7 +30,7 @@ class AppClient {
   }
 
   async checkHealth(): Promise<GetResponseType<string>> {
-    const response = await axios.get(`${this.baseUrl}/update`);
+    const response = await axios.get(`${this.baseUrl}/health-check`);
 
     return this.responseObjectBuilder(response);
   }
