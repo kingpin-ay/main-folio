@@ -15,7 +15,7 @@ function Test() {
 
   const checkCall1 = async () => {
     const result = await axios.get(
-      `https://p04ytf3xrh.execute-api.ap-south-1.amazonaws.com/default/update/`
+      `https://p04ytf3xrh.execute-api.ap-south-1.amazonaws.com/default`
     );
     console.log(result.data);
     setMainData2(`${result.data} + /update`);
