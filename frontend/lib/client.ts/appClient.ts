@@ -13,8 +13,8 @@ class AppClient {
   }
 
   responseObjectBuilder<T>(data: AxiosResponse<T>): GetResponseType<T> {
-    const result: GetResponseType<any> = {
-      data: null,
+    const result: GetResponseType<T> = {
+      data: {} as T,
       status: 0,
       message: "",
     };

@@ -1,6 +1,5 @@
 "use client";
 import { appClient } from "@/lib/client.ts/appClient";
-import axios from "axios";
 import { useState } from "react";
 
 function Test() {
