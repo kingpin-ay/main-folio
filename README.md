@@ -1,7 +1,11 @@
-- [ ] fix the frontend data
-- [ ] fix the theme changing button
-- [ ] deploy to the AWS amplify
-- [ ] add the .env for the backend
-- [ ] connect to neon db
-- [ ] add the backend to the amplify
-- [ ] fix the theme changing issue
+- [x] fix the frontend data
+- [x] fix the theme changing button
+- [x] deploy to the AWS amplify
+- [x] add the .env for the backend
+- [x] connect to neon db
+- [x] add the backend to the lambda
+- [x] fix the theme changing issue
+- [x] add the api gateway to the lambda function
+- [x] create a basic db structure for the app
+- [x] generate and push the migration
+- [x] start creating the dashboard

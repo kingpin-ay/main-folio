@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { handle, LambdaEvent } from "hono/aws-lambda";
 import { cors } from "hono/cors";
-import { serve } from "@hono/node-server";
+// import { serve } from "@hono/node-server";
 
 type Bindings = {
   event: LambdaEvent;
@@ -11,10 +11,6 @@ const app = new Hono<{ Bindings: Bindings }>().basePath("/default");
 
 app.use("*", cors());
 
-app.get("/", (c) => {
-  return c.text(`Hello hono! ${c.req.path}`, 200);
-});
-
 app.get("/health-check", (c) => {
   return c.text(
     `Hello hono starting point! ${c.req.path} - Health-check succesfull`,
@@ -22,6 +18,6 @@ app.get("/health-check", (c) => {
   );
 });
 
-serve({ port: 3001, fetch: app.fetch });
+// serve({ port: 3001, fetch: app.fetch });
 
-// export const handler = handle(app);
+export const handler = handle(app);
