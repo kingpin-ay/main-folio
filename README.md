@@ -9,3 +9,4 @@
 - [x] create a basic db structure for the app
 - [x] generate and push the migration
 - [x] start creating the dashboard
+- [ ] give some example .env file for setup

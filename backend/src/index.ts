@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { handle, LambdaEvent } from "hono/aws-lambda";
 import { cors } from "hono/cors";
-// import { serve } from "@hono/node-server";
+import { serve } from "@hono/node-server";
 
 type Bindings = {
   event: LambdaEvent;
@@ -18,6 +18,6 @@ app.get("/health-check", (c) => {
   );
 });
 
-// serve({ port: 3001, fetch: app.fetch });
+serve({ port: 3001, fetch: app.fetch });
 
-export const handler = handle(app);
+// export const handler = handle(app);
