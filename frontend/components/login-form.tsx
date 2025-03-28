@@ -69,23 +69,26 @@ export function LoginForm({
                   ? "User Name must be at least 8 characters long"
                   : undefined,
             }}
-            children={(field) => (
-              <>
-                <Input
-                  id="userName"
-                  type="userName"
-                  placeholder="admin"
-                  required
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-                {field.state.meta.errors.length ? (
-                  <em>{field.state.meta.errors.join(",")}</em>
-                ) : null}
-              </>
-            )}
-          />
+          >
+            {(field) => {
+              return (
+                <>
+                  <Input
+                    id="userName"
+                    type="userName"
+                    placeholder="admin"
+                    required
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.errors.length ? (
+                    <em>{field.state.meta.errors.join(",")}</em>
+                  ) : null}
+                </>
+              );
+            }}
+          </form.Field>
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
@@ -105,23 +108,26 @@ export function LoginForm({
                   ? "Password must be at least 8 characters long"
                   : undefined,
             }}
-            children={(field) => (
-              <>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter Your Password Here"
-                  required
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-                {field.state.meta.errors.length ? (
-                  <em>{field.state.meta.errors.join(",")}</em>
-                ) : null}
-              </>
-            )}
-          />
+          >
+            {(field) => {
+              return (
+                <>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter Your Password Here"
+                    required
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.errors.length ? (
+                    <em>{field.state.meta.errors.join(",")}</em>
+                  ) : null}
+                </>
+              );
+            }}
+          </form.Field>
         </div>
         <Button type="submit" className="w-full">
           Login
