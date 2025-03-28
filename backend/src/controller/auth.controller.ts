@@ -10,7 +10,6 @@ import {
 
 const app = new Hono()
   .post("/login", validator("form", loginValidator), login)
-  .post("/sign-up", validator("form", signUpValidator), signUp)
-  .get("/:id", (c) => c.json(`get ${c.req.param("id")}`));
+  .post("/sign-up", validator("form", signUpValidator), signUp);
 
 export default app;

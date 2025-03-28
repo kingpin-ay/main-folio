@@ -1,13 +1,5 @@
 import { randomBytes, scryptSync } from "crypto";
-const saltRound = process.env.SALT_ROUND;
-
-const safelyParseInt = (value: string): number | null => {
-  const parsed = parseInt(value);
-  if (isNaN(parsed)) {
-    return null;
-  }
-  return parsed;
-};
+import { env } from "./env";
 
 const encryptPassword = (password: string, salt: string) => {
   return scryptSync(password, salt, 32).toString("hex");
@@ -20,12 +12,8 @@ const encryptPassword = (password: string, salt: string) => {
  *
  */
 export const hashPassword = (password: string): string => {
-  const randomByteLength = safelyParseInt(saltRound!);
-  if (!randomByteLength) {
-    throw new Error("Invalid salt round");
-  }
   // Any random string here (ideally should be at least 16 bytes)
-  const salt = randomBytes(randomByteLength).toString("hex");
+  const salt = randomBytes(env.SALT_ROUND).toString("hex");
   return encryptPassword(password, salt) + salt;
 };
 
