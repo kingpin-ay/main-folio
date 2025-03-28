@@ -4,6 +4,9 @@ import { db } from "../db";
 import { eq } from "drizzle-orm";
 import { users } from "../db/schema";
 import { hashPassword, matchPassword } from "../../lib/helper/security";
+import { sign } from "hono/jwt";
+import { env } from "../../lib/helper/env";
+import { setSignedCookie } from "hono/cookie";
 
 export async function login(
   c: Context<
@@ -43,7 +46,51 @@ export async function login(
   const valid = matchPassword(password as string, user.password);
 
   if (valid) {
-    return c.json({ message: "success", data: { ...user } });
+    const payload = {
+      username: user.userName,
+      id: user.id,
+      jwtOrigin: "/auth/login",
+      exp: Math.floor(Date.now() / 1000) + 60 * 60, // 1 hour
+    };
+    const token = await sign(payload, env.JWT_SECRET);
+
+    const refreshTokenPayload = {
+      username: user.userName,
+      id: user.id,
+      jwtOrigin: "/auth/login",
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 1 week
+    };
+    const refreshToken = await sign(
+      refreshTokenPayload,
+      env.REFRESH_JWT_SECRET
+    );
+
+    // set signed cookie for the jwt tokens
+    await setSignedCookie(c, "login_token", token, env.COOKIE_SECRET, {
+      path: "/",
+      secure: true,
+      // domain: 'example.com',
+      httpOnly: true,
+      maxAge: 1000,
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      sameSite: "Strict",
+    });
+
+    // set signed token for the refresh token
+    await setSignedCookie(c, "refresh_token", refreshToken, env.COOKIE_SECRET, {
+      path: "/",
+      secure: true,
+      // domain: 'example.com',
+      httpOnly: true,
+      maxAge: 1000,
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      sameSite: "Strict",
+    });
+
+    return c.json({
+      message: "success",
+      data: { message: "Login Successful" },
+    });
   } else {
     return c.text("Invalid password", 401);
   }
