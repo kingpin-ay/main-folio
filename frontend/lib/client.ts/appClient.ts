@@ -36,7 +36,7 @@ class AppClient {
   }
 
   async login(formData: FormData): Promise<GetResponseType<string>> {
-    const response = await axios.post(`${this.baseUrl}/users/login`, formData);
+    const response = await axios.post(`${this.baseUrl}/auth/login`, formData);
 
     return this.responseObjectBuilder(response);
   }
