@@ -37,12 +37,29 @@ class AppClient {
 
   async login(formData: FormData): Promise<GetResponseType<string>> {
     const response = await axios.post(`${this.baseUrl}/auth/login`, formData);
+    // how to save the cookies retured by the login endpoint?
 
     return this.responseObjectBuilder(response);
   }
 
   async logout() {
-    const response = await axios.get(`${this.baseUrl}/auth/logout`);
+    // how to remoded the saved  cookies?
+    const response = await axios.get(`${this.baseUrl}/auth/logout`, {
+      withCredentials: true,
+    });
+
+    return response;
+  }
+  async verify() {
+    // how to remoded the saved  cookies?
+    const response = await axios.post(
+      `${this.baseUrl}/users/verify`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+
     return response;
   }
 }

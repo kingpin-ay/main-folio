@@ -68,23 +68,23 @@ export async function login(
     // set signed cookie for the jwt tokens
     await setSignedCookie(c, "login_token", token, env.COOKIE_SECRET, {
       path: "/",
-      secure: true,
+      secure: env.DEV_ENV === "PRODUCTION",
       // domain: 'example.com',
       httpOnly: true,
-      maxAge: 1000,
+      maxAge: 60 * 60 * 10,
       expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-      sameSite: "Strict",
+      sameSite: "lax",
     });
 
     // set signed token for the refresh token
     await setSignedCookie(c, "refresh_token", refreshToken, env.COOKIE_SECRET, {
       path: "/",
-      secure: true,
+      secure: env.DEV_ENV === "PRODUCTION",
       // domain: 'example.com',
       httpOnly: true,
-      maxAge: 1000,
+      maxAge: 60 * 60 * 24 * 7,
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      sameSite: "Strict",
+      sameSite: "lax",
     });
 
     return c.json({

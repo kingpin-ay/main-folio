@@ -9,6 +9,8 @@ export const envSchema = z.object({
   JWT_SECRET: z.string().default(""),
   REFRESH_JWT_SECRET: z.string().default(""),
   COOKIE_SECRET: z.string().default(""),
+  DEV_ENV: z.enum(["DEVELOPMENT", "PRODUCTION"]).default("PRODUCTION"),
+  FRONTEND_URL: z.string().default(""),
 });
 
 type Env = z.infer<typeof envSchema>;

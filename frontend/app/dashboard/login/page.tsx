@@ -25,6 +25,8 @@ export default function Page() {
           src="/main-storage/login-screen-background.jpeg"
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          width={1920}
+          height={1080}
         />
       </div>
     </div>

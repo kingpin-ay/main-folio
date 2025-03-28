@@ -5,17 +5,22 @@ import { appClient } from "@/lib/client.ts/appClient";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-export default function page() {
+export default function Page() {
   const router = useRouter();
 
   const logout = async () => {
     await appClient.logout();
     router.push("/dashboard/login");
   };
+  const verify = async () => {
+    await appClient.verify();
+    // router.push("/dashboard/login");
+  };
 
   return (
     <div>
       <Button onClick={logout}>Logout</Button>
+      <Button onClick={verify}>Verify</Button>
     </div>
   );
 }
