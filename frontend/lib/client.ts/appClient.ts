@@ -40,6 +40,11 @@ class AppClient {
 
     return this.responseObjectBuilder(response);
   }
+
+  async logout() {
+    const response = await axios.get(`${this.baseUrl}/auth/logout`);
+    return response;
+  }
 }
 
 export const appClient = new AppClient(process.env.NEXT_PUBLIC_BASE_URL ?? ``);

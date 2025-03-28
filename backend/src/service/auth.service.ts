@@ -6,7 +6,7 @@ import { users } from "../db/schema";
 import { hashPassword, matchPassword } from "../../lib/helper/security";
 import { sign } from "hono/jwt";
 import { env } from "../../lib/helper/env";
-import { setSignedCookie } from "hono/cookie";
+import { deleteCookie, setSignedCookie } from "hono/cookie";
 
 export async function login(
   c: Context<
@@ -146,4 +146,10 @@ export async function signUp(
   if (!userInsertion) return c.text("User not created", 400);
 
   return c.json({ message: "success", data: userInsertion });
+}
+
+export async function logout(c: Context) {
+  deleteCookie(c, "login_token");
+  deleteCookie(c, "refresh_token");
+  return c.json({ message: "success", data: "Logout Successful" });
 }
