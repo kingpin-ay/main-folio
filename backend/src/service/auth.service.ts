@@ -4,6 +4,9 @@ import { db } from "../db";
 import { eq } from "drizzle-orm";
 import { users } from "../db/schema";
 import { hashPassword, matchPassword } from "../../lib/helper/security";
+import { sign } from "hono/jwt";
+import { env } from "../../lib/helper/env";
+import { deleteCookie, setSignedCookie } from "hono/cookie";
 
 export async function login(
   c: Context<
@@ -43,7 +46,51 @@ export async function login(
   const valid = matchPassword(password as string, user.password);
 
   if (valid) {
-    return c.json({ message: "success", data: { ...user } });
+    const payload = {
+      username: user.userName,
+      id: user.id,
+      jwtOrigin: "/auth/login",
+      exp: Math.floor(Date.now() / 1000) + 60 * 60, // 1 hour
+    };
+    const token = await sign(payload, env.JWT_SECRET);
+
+    const refreshTokenPayload = {
+      username: user.userName,
+      id: user.id,
+      jwtOrigin: "/auth/login",
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 1 week
+    };
+    const refreshToken = await sign(
+      refreshTokenPayload,
+      env.REFRESH_JWT_SECRET
+    );
+
+    // set signed cookie for the jwt tokens
+    await setSignedCookie(c, "login_token", token, env.COOKIE_SECRET, {
+      path: "/",
+      secure: env.DEV_ENV === "PRODUCTION",
+      // domain: 'example.com',
+      httpOnly: true,
+      maxAge: 60 * 60 * 10,
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      sameSite: "lax",
+    });
+
+    // set signed token for the refresh token
+    await setSignedCookie(c, "refresh_token", refreshToken, env.COOKIE_SECRET, {
+      path: "/",
+      secure: env.DEV_ENV === "PRODUCTION",
+      // domain: 'example.com',
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7,
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      sameSite: "lax",
+    });
+
+    return c.json({
+      message: "success",
+      data: { message: "Login Successful" },
+    });
   } else {
     return c.text("Invalid password", 401);
   }
@@ -99,4 +146,10 @@ export async function signUp(
   if (!userInsertion) return c.text("User not created", 400);
 
   return c.json({ message: "success", data: userInsertion });
+}
+
+export async function logout(c: Context) {
+  deleteCookie(c, "login_token");
+  deleteCookie(c, "refresh_token");
+  return c.json({ message: "success", data: "Logout Successful" });
 }
