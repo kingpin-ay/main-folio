@@ -34,6 +34,12 @@ class AppClient {
 
     return this.responseObjectBuilder(response);
   }
+
+  async login(formData: FormData): Promise<GetResponseType<string>> {
+    const response = await axios.post(`${this.baseUrl}/users/login`, formData);
+
+    return this.responseObjectBuilder(response);
+  }
 }
 
 export const appClient = new AppClient(process.env.NEXT_PUBLIC_BASE_URL ?? ``);
