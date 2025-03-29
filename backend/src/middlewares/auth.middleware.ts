@@ -1,12 +1,17 @@
 import { Context, Next } from "hono";
-import { getSignedCookie } from "hono/cookie";
+import { getSignedCookie, setSignedCookie } from "hono/cookie";
 import { verify } from "hono/jwt";
 import { env } from "../../lib/helper/env";
 
 export const authMiddleware = async (c: Context, next: Next) => {
   try {
-    const { login_token, refresh_token }: { login_token?: string; refresh_token?: string } =
-      await getSignedCookie(c, env.COOKIE_SECRET);
+    const {
+      login_token,
+      refresh_token,
+    }: { login_token?: string; refresh_token?: string } = await getSignedCookie(
+      c,
+      env.COOKIE_SECRET
+    );
 
     if (!login_token || !refresh_token) {
       return c.json({ error: "Unauthorized: No token provided" }, 401);

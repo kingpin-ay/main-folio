@@ -11,6 +11,7 @@ export const envSchema = z.object({
   COOKIE_SECRET: z.string().default(""),
   DEV_ENV: z.enum(["DEVELOPMENT", "PRODUCTION"]).default("PRODUCTION"),
   FRONTEND_URL: z.string().default(""),
+  COOKIE_DOMAIN: z.string().default(""),
 });
 
 type Env = z.infer<typeof envSchema>;
