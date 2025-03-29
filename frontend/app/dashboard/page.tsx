@@ -10,7 +10,7 @@ export default function Page() {
 
   const logout = async () => {
     await appClient.logout();
-    router.push("/dashboard/login");
+    router.push("/login");
   };
   const verify = async () => {
     await appClient.verify();
