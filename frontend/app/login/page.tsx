@@ -1,8 +1,13 @@
+'use client'
+
 import { GalleryVerticalEnd } from "lucide-react";
 import { LoginForm } from "@/components/login-form";
 import Image from "next/image";
+import { useAuth } from '@/hooks/useAuth'
 
-export default function Page() {
+export default function LoginPage() {
+  useAuth() // This will handle the redirection if user is already logged in
+  
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">

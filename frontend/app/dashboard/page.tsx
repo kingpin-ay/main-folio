@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import UserSettings from "@/components/user-settings";
 import { appClient } from "@/lib/client.ts/appClient";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -10,17 +10,12 @@ export default function Page() {
 
   const logout = async () => {
     await appClient.logout();
-    router.push("/dashboard/login");
-  };
-  const verify = async () => {
-    await appClient.verify();
-    // router.push("/dashboard/login");
+    router.push("/login");
   };
 
   return (
-    <div>
-      <Button onClick={logout}>Logout</Button>
-      <Button onClick={verify}>Verify</Button>
-    </div>
+    <main className="min-h-screen bg-black text-white">
+      <UserSettings logout={logout} />
+    </main>
   );
 }
