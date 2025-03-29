@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import UserSettings from "@/components/user-settings";
 import { appClient } from "@/lib/client.ts/appClient";
 import { useRouter } from "next/navigation";
