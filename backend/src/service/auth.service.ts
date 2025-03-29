@@ -16,20 +16,20 @@ export async function login(
     {
       in: {
         form: {
-          userName: ParsedFormValue | ParsedFormValue[];
+          username: ParsedFormValue | ParsedFormValue[];
           password: ParsedFormValue | ParsedFormValue[];
         };
       };
       out: {
         form: {
-          userName: ParsedFormValue | ParsedFormValue[];
+          username: ParsedFormValue | ParsedFormValue[];
           password: ParsedFormValue | ParsedFormValue[];
         };
       };
     }
   >
 ) {
-  const { userName, password } = c.req.valid("form");
+  const { username, password } = c.req.valid("form");
 
   const user = await db.query.users.findFirst({
     columns: {
@@ -37,7 +37,7 @@ export async function login(
       userName: true,
       password: true,
     },
-    where: eq(users.userName, userName as string),
+    where: eq(users.userName, username as string),
   });
 
   if (!user) {

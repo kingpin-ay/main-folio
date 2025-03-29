@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
 interface loginSchem {
-  userName: string;
+  username: string;
   password: string;
 }
 
@@ -22,7 +22,7 @@ export function LoginForm({
   const form = useForm({
     onSubmit: async ({ value }) => {
       const formData = new FormData();
-      formData.append("userName", value.userName);
+      formData.append("username", value.username);
       formData.append("password", value.password);
       await appClient
         .login(formData)
@@ -39,7 +39,7 @@ export function LoginForm({
         });
     },
     defaultValues: {
-      userName: "",
+      username: "",
       password: "",
     } as loginSchem,
   });
@@ -62,7 +62,7 @@ export function LoginForm({
         <div className="grid gap-2">
           <Label htmlFor="userName">User Name</Label>
           <form.Field
-            name="userName"
+            name="username"
             validators={{
               onChange: ({ value }) =>
                 value.length < 8
