@@ -16,7 +16,7 @@ export default function Page() {
 
   return (
     <main className="min-h-screen bg-black text-white">
-      <UserSettings />
+      <UserSettings logout={logout} />
     </main>
   );
 }

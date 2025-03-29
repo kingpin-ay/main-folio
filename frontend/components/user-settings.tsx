@@ -21,13 +21,12 @@ type Tab =
   | "projects"
   | "blogs";
 
-export default function UserSettings() {
-  const [activeTab, setActiveTab] = useState<Tab>("profile");
+interface UserSettingsProps {
+  logout: () => Promise<void>;
+}
 
-  const handleLogout = () => {
-    // Implement logout functionality
-    console.log("Logging out...");
-  };
+export default function UserSettings({ logout }: UserSettingsProps) {
+  const [activeTab, setActiveTab] = useState<Tab>("profile");
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -82,7 +81,7 @@ export default function UserSettings() {
           <Button
             variant="ghost"
             className="justify-start mt-auto text-red-500 hover:text-red-400 hover:bg-red-500/10"
-            onClick={handleLogout}
+            onClick={logout}
           >
             <LogOut className="mr-2 h-4 w-4" />
             Logout
