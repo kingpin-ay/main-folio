@@ -7,6 +7,7 @@ import { hashPassword, matchPassword } from "../../lib/helper/security";
 import { sign } from "hono/jwt";
 import { env } from "../../lib/helper/env";
 import { deleteCookie, setSignedCookie } from "hono/cookie";
+import { cookieConfig } from "../../lib/helper/cookie";
 
 export async function login(
   c: Context<
@@ -66,26 +67,22 @@ export async function login(
     );
 
     // set signed cookie for the jwt tokens
-    await setSignedCookie(c, "login_token", token, env.COOKIE_SECRET, {
-      path: "/",
-      secure: env.DEV_ENV === "PRODUCTION",
-      // domain: 'example.com',
-      httpOnly: true,
-      maxAge: 60 * 60 * 10,
-      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-      sameSite: "lax",
-    });
+    await setSignedCookie(
+      c,
+      "login_token",
+      token,
+      env.COOKIE_SECRET,
+      cookieConfig(10, 1)
+    );
 
     // set signed token for the refresh token
-    await setSignedCookie(c, "refresh_token", refreshToken, env.COOKIE_SECRET, {
-      path: "/",
-      secure: env.DEV_ENV === "PRODUCTION",
-      // domain: 'example.com',
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      sameSite: "lax",
-    });
+    await setSignedCookie(
+      c,
+      "refresh_token",
+      refreshToken,
+      env.COOKIE_SECRET,
+      cookieConfig(24 * 7, 7)
+    );
 
     return c.json({
       message: "success",
