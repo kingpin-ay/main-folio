@@ -13,6 +13,6 @@ export function cookieConfig(
     maxAge: 60 * 60 * maxAgeHour,
     expires: new Date(Date.now() + expiresDays * 24 * 60 * 60 * 1000),
     sameSite:
-      env.DEV_ENV === "PRODUCTION" ? ("none" as const) : ("lax" as const),
+      env.DEV_ENV === "PRODUCTION" ? ("None" as const) : ("lax" as const),
   } as CookieOptions;
 }
