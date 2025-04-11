@@ -15,7 +15,7 @@ const nextConfig = {
           },
           {
             key: 'Access-Control-Allow-Origin',
-            value: process.env.NEXT_PUBLIC_BASE_URL || 'https://p04ytf3xrh.execute-api.ap-south-1.amazonaws.com',
+            value: process.env.NEXT_PUBLIC_BASE_URL || 'https://api.r-icing.com',
           },
           {
             key: 'Access-Control-Allow-Methods',
