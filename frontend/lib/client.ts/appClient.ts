@@ -15,11 +15,11 @@ class AppClient {
     this.axiosInstance = axios.create({
       withCredentials: true,
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      xsrfCookieName: 'XSRF-TOKEN',
-      xsrfHeaderName: 'X-XSRF-TOKEN',
+      xsrfCookieName: "XSRF-TOKEN",
+      xsrfHeaderName: "X-XSRF-TOKEN",
     });
 
     this.axiosInstance.interceptors.request.use(
@@ -57,7 +57,7 @@ class AppClient {
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
           withCredentials: true,
         }
@@ -76,9 +76,9 @@ class AppClient {
         {
           withCredentials: true,
           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          }
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
         }
       );
       return this.responseObjectBuilder(response);
@@ -87,13 +87,15 @@ class AppClient {
         return {
           data: null,
           status: error.response?.status ?? 500,
-          message: error.response?.statusText ?? 'An error occurred while verifying the user.',
+          message:
+            error.response?.statusText ??
+            "An error occurred while verifying the user.",
         };
       }
       return {
         data: null,
         status: 500,
-        message: 'An unexpected error occurred while verifying the user.',
+        message: "An unexpected error occurred while verifying the user.",
       };
     }
   }
@@ -111,6 +113,44 @@ class AppClient {
       throw error;
     }
   }
+
+  async getUserDashboard(): Promise<
+    GetResponseType<UserDashboard | undefined>
+  > {
+    try {
+      const response = await this.axiosInstance.get(
+        `${this.baseUrl}/users/get/user/dashboard`,
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.data) {
+        return {
+          data: null,
+          status: response.status,
+          message: response.statusText,
+        };
+      }
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          data: null,
+          status: error.response?.status ?? 500,
+          message: error.response?.statusText ?? "An error occurred",
+        };
+      }
+      return {
+        data: null,
+        status: 500,
+        message: "An unexpected error occurred",
+      };
+    }
+  }
 }
 
-export const appClient = new AppClient(process.env.NEXT_PUBLIC_BASE_URL ?? '');
+export const appClient = new AppClient(process.env.NEXT_PUBLIC_BASE_URL ?? "");
