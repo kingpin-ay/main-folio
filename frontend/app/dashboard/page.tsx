@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardDataContainer } from "@/components/data-container/dashboard-data-container";
 import UserSettings from "@/components/user-settings";
 import { appClient } from "@/lib/client.ts/appClient";
 import { useRouter } from "next/navigation";
@@ -15,7 +16,9 @@ export default function Page() {
 
   return (
     <main className="min-h-screen bg-black text-white">
-      <UserSettings logout={logout} />
+      <DashboardDataContainer>
+        <UserSettings logout={logout} />
+      </DashboardDataContainer>
     </main>
   );
 }

@@ -7,16 +7,11 @@ export const useAuth = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      try {
-        const response = await appClient.verify()
-        if (response.status === 200) {
-          // User is authenticated
-          return true
-        }
-        return false
-      } catch (error) {
-        return false
+      const response = await appClient.verify()
+      if (response.status === 200) {
+        return true
       }
+      return false
     }
 
     const handleAuth = async () => {
@@ -36,12 +31,8 @@ export const useAuth = () => {
 
   return {
     verify: async () => {
-      try {
-        const response = await appClient.verify()
-        return response.status === 200
-      } catch (error) {
-        return false
-      }
+      const response = await appClient.verify()
+      return response.status === 200
     }
   }
 } 

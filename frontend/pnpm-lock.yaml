@@ -32,6 +32,9 @@ importers:
       '@tanstack/react-form':
         specifier: ^1.1.2
         version: 1.1.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.8.2)
+      '@tanstack/react-query':
+        specifier: ^5.72.2
+        version: 5.72.2(react@19.0.0)
       axios:
         specifier: ^1.8.4
         version: 1.8.4
@@ -767,6 +770,9 @@ packages:
   '@tanstack/form-core@1.1.2':
     resolution: {integrity: sha512-Pjges7LoCKoglwnXPQrOUlR2L4LEyb6LVr3sMPcLCw15Ex32J7ox4rVEoz2TwPxz8LgoXl+sNsPn2Qp+thhTuQ==}
 
+  '@tanstack/query-core@5.72.2':
+    resolution: {integrity: sha512-fxl9/0yk3mD/FwTmVEf1/H6N5B975H0luT+icKyX566w6uJG0x6o+Yl+I38wJRCaogiMkstByt+seXfDbWDAcA==}
+
   '@tanstack/react-form@1.1.2':
     resolution: {integrity: sha512-kbjKFvFrNMe+3QHJxmKLO61mXuScgRcB6xAWLI7yw8UkQ/MNVi1ZoL3inp5I4hDkcjdpCD1Syn1DotMOX5XQxw==}
     peerDependencies:
@@ -778,6 +784,11 @@ packages:
         optional: true
       vinxi:
         optional: true
+
+  '@tanstack/react-query@5.72.2':
+    resolution: {integrity: sha512-SVNHzyBUYiis+XiCl+8yiPZmMYei2AKYY94wM/zpvB5l1jxqOo82FQTziSJ4pBi96jtYqvYrTMxWynmbQh3XKw==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@tanstack/react-store@0.7.0':
     resolution: {integrity: sha512-S/Rq17HaGOk+tQHV/yrePMnG1xbsKZIl/VsNWnNXt4XW+tTY8dTlvpJH2ZQ3GRALsusG5K6Q3unAGJ2pd9W/Ng==}
@@ -3014,6 +3025,8 @@ snapshots:
     dependencies:
       '@tanstack/store': 0.7.0
 
+  '@tanstack/query-core@5.72.2': {}
+
   '@tanstack/react-form@1.1.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.8.2)':
     dependencies:
       '@remix-run/node': 2.16.2(typescript@5.8.2)
@@ -3024,6 +3037,11 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
       - typescript
+
+  '@tanstack/react-query@5.72.2(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.72.2
+      react: 19.0.0
 
   '@tanstack/react-store@0.7.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
