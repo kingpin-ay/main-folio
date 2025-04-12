@@ -105,6 +105,7 @@ export async function signUp(
           firstName: ParsedFormValue | ParsedFormValue[];
           lastName: ParsedFormValue | ParsedFormValue[];
           bio: ParsedFormValue | ParsedFormValue[];
+          email: ParsedFormValue | ParsedFormValue[];
         };
       };
       out: {
@@ -114,12 +115,14 @@ export async function signUp(
           firstName: ParsedFormValue | ParsedFormValue[];
           lastName: ParsedFormValue | ParsedFormValue[];
           bio: ParsedFormValue | ParsedFormValue[];
+          email: ParsedFormValue | ParsedFormValue[];
         };
       };
     }
   >
 ) {
-  const { userName, password, firstName, lastName, bio } = c.req.valid("form");
+  const { userName, password, firstName, lastName, bio, email } =
+    c.req.valid("form");
   console.log("data -> ", userName, password, firstName, lastName);
 
   const user = await db.query.users.findFirst({
@@ -138,6 +141,7 @@ export async function signUp(
     firstName: firstName as string,
     lastName: lastName as string,
     bio: bio as string,
+    email: email as string,
   });
 
   if (!userInsertion) return c.text("User not created", 400);
