@@ -16,9 +16,9 @@ export default function Page() {
 
   return (
     <main className="min-h-screen bg-black text-white">
-      <DashboardDataContainer>
-        <UserSettings logout={logout} />
-      </DashboardDataContainer>
+      <DashboardDataContainer
+        render={(data) => <UserSettings logout={logout} user={data} />}
+      />
     </main>
   );
 }

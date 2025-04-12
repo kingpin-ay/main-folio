@@ -12,7 +12,7 @@ import PreferencesTab from "./tabs/preferences-tab";
 import ProjectsTab from "./tabs/projects-tab";
 import BlogsTab from "./tabs/blogs-tab";
 import { Button } from "@/components/ui/button";
-
+import { UserDashboard } from "@/lib/types";
 type Tab =
   | "profile"
   | "about"
@@ -23,6 +23,7 @@ type Tab =
 
 interface UserSettingsProps {
   logout: () => Promise<void>;
+  user: UserDashboard;
 }
 
 export default function UserSettings({ logout }: UserSettingsProps) {

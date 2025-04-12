@@ -1,17 +1,22 @@
 "use client";
 
 import { appClient } from "@/lib/client.ts/appClient";
+import { UserDashboard } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const DashboardDataContainer = ({
-  children,
+  render,
 }: {
-  children: React.ReactNode;
+  render: (data: UserDashboard) => React.ReactNode;
 }) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["/get/user/dashboard"],
-    queryFn: () => {
-      return appClient.getUserDashboard();
+    queryFn: async () => {
+      const response = await appClient.getUserDashboard();
+      if (response.status === 200) {
+        return response.data;
+      }
+      return null;
     },
   });
 
@@ -23,10 +28,9 @@ export const DashboardDataContainer = ({
     return <div>Error: {error.message}</div>;
   }
 
-  return (
-    <div>
-      {JSON.stringify(data)}
-      {children}
-    </div>
-  );
+  if (!data) {
+    return <div>No data</div>;
+  }
+
+  return render(data);
 };
