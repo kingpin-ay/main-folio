@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { UserDashboard } from "../types";
 
 type GetResponseType<T> = {
   data: T | null;
