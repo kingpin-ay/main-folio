@@ -3,6 +3,7 @@
 import { appClient } from "@/lib/client.ts/appClient";
 import { UserDashboard } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
+import { StateHandler } from "@/components/ui/state-handler";
 
 export const DashboardDataContainer = ({
   render,
@@ -20,17 +21,9 @@ export const DashboardDataContainer = ({
     },
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!data) {
-    return <div>No data</div>;
-  }
-
-  return render(data);
+  return (
+    <StateHandler isLoading={isLoading} error={error} data={data}>
+      {data && render(data)}
+    </StateHandler>
+  );
 };
