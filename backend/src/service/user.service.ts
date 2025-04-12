@@ -12,6 +12,7 @@ export async function getUserDashboard(userPayload: UserPayload) {
       firstName: true,
       lastName: true,
       bio: true,
+      email: true,
     },
   });
 
