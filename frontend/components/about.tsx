@@ -11,10 +11,10 @@ const techStack = {
     { name: "Next.js", icon: "/icon-svg/next-js.svg?height=60&width=60" },
     { name: "TypeScript", icon: "/icon-svg/typescript.svg?height=60&width=60" },
     { name: "Tailwind CSS", icon: "/icon-svg/tailwind.svg?height=60&width=60" },
-    {
-      name: "Motion",
-      icon: "https://framerusercontent.com/images/3aQX5dnH5Yqgsn98QXKF2ZXxIE.png",
-    },
+    // {
+    //   name: "Motion",
+    //   icon: "https://framerusercontent.com/images/3aQX5dnH5Yqgsn98QXKF2ZXxIE.png",
+    // },
   ],
   backend: [
     { name: "Node.js", icon: "/icon-svg/nodejs.svg?height=60&width=60" },
