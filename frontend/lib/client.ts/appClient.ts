@@ -1,7 +1,7 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse, AxiosError } from "axios";
 
 type GetResponseType<T> = {
-  data: T;
+  data: T | null;
   status: number;
   message: string;
 };
@@ -68,7 +68,7 @@ class AppClient {
     }
   }
 
-  async verify() {
+  async verify(): Promise<GetResponseType<string>> {
     try {
       const response = await this.axiosInstance.post(
         `${this.baseUrl}/users/verify`,
@@ -83,7 +83,18 @@ class AppClient {
       );
       return this.responseObjectBuilder(response);
     } catch (error) {
-      throw error;
+      if (axios.isAxiosError(error)) {
+        return {
+          data: null,
+          status: error.response?.status ?? 500,
+          message: error.response?.statusText ?? 'An error occurred while verifying the user.',
+        };
+      }
+      return {
+        data: null,
+        status: 500,
+        message: 'An unexpected error occurred while verifying the user.',
+      };
     }
   }
 
