@@ -15,6 +15,27 @@
       "when": 1743144637388,
       "tag": "0001_swift_dazzler",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1744462717762,
+      "tag": "0002_illegal_stone_men",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1744462841447,
+      "tag": "0003_next_captain_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1744462897539,
+      "tag": "0004_sour_brother_voodoo",
+      "breakpoints": true
     }
   ]
 }
