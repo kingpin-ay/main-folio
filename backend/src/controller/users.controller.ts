@@ -2,9 +2,16 @@
 import { Hono } from "hono";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { Variables } from "../../lib/types/user.type.controller";
-import { getUserDashboard, updateUserProfile } from "../service/user.service";
+import {
+  getUserDashboard,
+  updateUserAbout,
+  updateUserProfile,
+} from "../service/user.service";
 import { validator } from "hono/validator";
-import { profileTabValidator } from "../../lib/validator/dashboard.validator";
+import {
+  aboutTabValidator,
+  profileTabValidator,
+} from "../../lib/validator/dashboard.validator";
 
 const app = new Hono<{ Variables: Variables }>();
 
@@ -40,6 +47,23 @@ app.post(
       data: user,
       status: 200,
       message: "Profile updated successfully",
+    });
+  }
+);
+
+app.post(
+  "/post/user/dashboard/about",
+  validator("json", aboutTabValidator),
+  async (c) => {
+    const body = c.req.valid("json");
+    const userPayload = c.get("user");
+
+    const user = await updateUserAbout(userPayload, body);
+
+    return c.json({
+      data: user,
+      status: 200,
+      message: "About updated successfully",
     });
   }
 );

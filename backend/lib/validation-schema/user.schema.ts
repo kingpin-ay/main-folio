@@ -21,3 +21,12 @@ export const profileTabValidatorSchema = z.object({
   user_name: z.string(),
   email: z.string(),
 });
+
+export const aboutTabValidatorSchema = z.object({
+  shortDescription: z.string(),
+  description: z.string(),
+  imageLink: z.string(),
+  email: z.string(),
+  phoneNumber: z.string(),
+  location: z.string(),
+});

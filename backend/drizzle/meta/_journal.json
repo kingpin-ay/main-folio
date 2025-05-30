@@ -36,6 +36,13 @@
       "when": 1744462897539,
       "tag": "0004_sour_brother_voodoo",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1748629375739,
+      "tag": "0005_secret_meteorite",
+      "breakpoints": true
     }
   ]
 }

@@ -12,7 +12,7 @@ export const users = pgTable("user", {
 });
 
 export const projects = pgTable("project", {
-  id: bigint("id", { mode: "number" }).primaryKey(),
+  id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   imageLink: text("image_link"),
@@ -24,7 +24,7 @@ export const projects = pgTable("project", {
 });
 
 export const projectTags = pgTable("project_tags", {
-  id: bigint("id", { mode: "number" }).primaryKey(),
+  id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
   projectId: bigint("project_id", { mode: "number" })
     .notNull()
     .references(() => projects.id),
@@ -32,7 +32,7 @@ export const projectTags = pgTable("project_tags", {
 });
 
 export const blogs = pgTable("blog", {
-  id: bigint("id", { mode: "number" }).primaryKey(),
+  id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   blogText: text("blog_text").notNull(),
@@ -45,7 +45,7 @@ export const blogs = pgTable("blog", {
 });
 
 export const userAbout = pgTable("user_about", {
-  id: bigint("id", { mode: "number" }).primaryKey(),
+  id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
   shortDescription: text("short_description"),
   description: text("description").notNull(),
   imageLink: text("image_link").notNull(),
@@ -58,7 +58,7 @@ export const userAbout = pgTable("user_about", {
 });
 
 export const stackGroups = pgTable("stack_group", {
-  id: bigint("id", { mode: "number" }).primaryKey(),
+  id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
   name: text("name").notNull(),
   description: text("description"),
   userId: bigint("user_id", { mode: "number" })
@@ -67,7 +67,7 @@ export const stackGroups = pgTable("stack_group", {
 });
 
 export const stackItems = pgTable("stack_item", {
-  id: bigint("id", { mode: "number" }).primaryKey(),
+  id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
   stackGroupId: bigint("stack_group_id", { mode: "number" })
     .notNull()
     .references(() => stackGroups.id),
@@ -76,7 +76,7 @@ export const stackItems = pgTable("stack_item", {
 });
 
 export const contactDetails = pgTable("contact_details", {
-  id: bigint("id", { mode: "number" }).primaryKey(),
+  id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
   userId: bigint("user_id", { mode: "number" })
     .notNull()
     .references(() => users.id),

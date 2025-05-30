@@ -84,7 +84,7 @@ export default function UserSettings({ logout, data }: UserSettingsProps) {
         {/* Main Content */}
         <div className="flex-1 border border-gray-800 rounded-lg p-6">
           {activeTab === "profile" && <ProfileTab user={user} />}
-          {activeTab === "about" && <AboutTab />}
+          {activeTab === "about" && <AboutTab userAbout={userAbout} />}
           {activeTab === "contacts" && <ContactsTab />}
           {activeTab === "preferences" && <PreferencesTab />}
           {activeTab === "projects" && <ProjectsTab />}

@@ -2,10 +2,14 @@ import { db } from "../db";
 import { userAbout, users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { UserPayload } from "../../lib/types/user.type.controller";
-import { profileTabValidatorSchema } from "../../lib/validation-schema/user.schema";
+import {
+  profileTabValidatorSchema,
+  aboutTabValidatorSchema,
+} from "../../lib/validation-schema/user.schema";
 import { z } from "zod";
 
 export type UserProfile = z.infer<typeof profileTabValidatorSchema>;
+export type UserAbout = z.infer<typeof aboutTabValidatorSchema>;
 
 export async function getUserDashboard(userPayload: UserPayload) {
   const user = await db.query.users.findFirst({
@@ -50,6 +54,38 @@ export async function updateUserProfile(
       .where(eq(users.id, userPayload.id));
 
     return user;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}
+
+export async function updateUserAbout(
+  userPayload: UserPayload,
+  body: UserAbout
+) {
+  try {
+    const foundedUserAboutData = await db.query.userAbout.findFirst({
+      where: eq(userAbout.userId, userPayload.id),
+    });
+
+    if (!foundedUserAboutData) {
+      const userAboutData = await db.insert(userAbout).values({
+        userId: userPayload.id,
+        shortDescription: body.shortDescription,
+        description: body.description,
+        imageLink: body.imageLink,
+        email: body.email,
+        phoneNumber: body.phoneNumber,
+        location: body.location,
+      });
+      return userAboutData;
+    } else {
+      const userAboutData = await db
+        .update(userAbout)
+        .set({ ...body, userId: userPayload.id })
+        .where(eq(userAbout.userId, userPayload.id));
+      return userAboutData;
+    }
   } catch (error) {
     throw new Error("User not found");
   }

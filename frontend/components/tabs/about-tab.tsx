@@ -7,25 +7,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { UserAbout } from "@/lib/types";
+import { appClient } from "@/lib/client.ts/appClient";
+import { toast } from "@/hooks/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface UserAbout {
-  short_description: string;
-  description: string;
-  image_link: string;
-  email: string;
-  phone_number: string;
-  location: string;
+function submitFormData(about: UserAbout) {
+  return appClient.updateUserAbout(about);
 }
 
-export default function AboutTab() {
+export default function AboutTab({ userAbout }: { userAbout: UserAbout }) {
+  const queryClient = useQueryClient();
   const [about, setAbout] = useState<UserAbout>({
-    short_description: "Full-stack developer with 5+ years of experience",
-    description:
-      "I specialize in building modern web applications using React, Next.js, and Node.js. I'm passionate about creating intuitive user interfaces and scalable backend systems.",
-    image_link: "https://example.com/profile.jpg",
-    email: "contact@example.com",
-    phone_number: "+1 (555) 123-4567",
-    location: "San Francisco, CA",
+    shortDescription: userAbout?.shortDescription ?? "",
+    description: userAbout?.description ?? "",
+    imageLink: userAbout?.imageLink ?? "",
+    email: userAbout?.email ?? "",
+    phoneNumber: userAbout?.phoneNumber ?? "",
+    location: userAbout?.location ?? "",
   });
 
   const handleChange = (
@@ -35,12 +34,23 @@ export default function AboutTab() {
     setAbout((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Updating about:", about);
-    // Implement API call to update about information
+    mutation.mutate(about);
   };
 
+  const mutation = useMutation({
+    mutationFn: async (about: UserAbout) => {
+      await submitFormData(about);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/get/user/dashboard"] });
+      toast({
+        title: "Update: successful",
+        description: new Date().toLocaleString(),
+      });
+    },
+  });
   return (
     <div className="space-y-6">
       <div>
@@ -56,8 +66,8 @@ export default function AboutTab() {
           <Label htmlFor="short_description">Short Description</Label>
           <Input
             id="short_description"
-            name="short_description"
-            value={about.short_description}
+            name="shortDescription"
+            value={about.shortDescription}
             onChange={handleChange}
             className="bg-gray-900 border-gray-700"
           />
@@ -81,8 +91,8 @@ export default function AboutTab() {
           <Label htmlFor="image_link">Profile Image URL</Label>
           <Input
             id="image_link"
-            name="image_link"
-            value={about.image_link}
+            name="imageLink"
+            value={about.imageLink}
             onChange={handleChange}
             className="bg-gray-900 border-gray-700"
           />
@@ -107,8 +117,8 @@ export default function AboutTab() {
           <Label htmlFor="phone_number">Phone Number</Label>
           <Input
             id="phone_number"
-            name="phone_number"
-            value={about.phone_number}
+            name="phoneNumber"
+            value={about.phoneNumber}
             onChange={handleChange}
             className="bg-gray-900 border-gray-700"
           />
