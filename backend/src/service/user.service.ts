@@ -1,6 +1,15 @@
 import { db } from "../db";
-import { userAbout, users } from "../db/schema";
-import { eq } from "drizzle-orm";
+import {
+  contactDetails,
+  projects,
+  projectTags,
+  stackGroups,
+  stackItems,
+  userAbout,
+  users,
+  blogs,
+} from "../db/schema";
+import { eq, inArray } from "drizzle-orm";
 import { UserPayload } from "../../lib/types/user.type.controller";
 import {
   profileTabValidatorSchema,
@@ -24,6 +33,10 @@ export async function getUserDashboard(userPayload: UserPayload) {
     },
   });
 
+  if (!user) {
+    throw new Error("User not found");
+  }
+
   const userAboutData = await db.query.userAbout.findFirst({
     where: eq(userAbout.userId, userPayload.id),
     columns: {
@@ -36,11 +49,78 @@ export async function getUserDashboard(userPayload: UserPayload) {
     },
   });
 
-  if (!user) {
-    throw new Error("User not found");
-  }
+  const contactDetailsData = await db.query.contactDetails.findMany({
+    where: eq(contactDetails.userId, userPayload.id),
+    columns: {
+      link: true,
+      linkType: true,
+    },
+  });
 
-  return { user: user, userAbout: userAboutData };
+  const stackGroupsData = await db.query.stackGroups.findMany({
+    where: eq(stackGroups.userId, userPayload.id),
+    columns: {
+      id: true,
+      name: true,
+      description: true,
+    },
+  });
+  const stackGroupIds = stackGroupsData.map((group) => group.id);
+
+  const stackItemsData = await db.query.stackItems.findMany({
+    where: inArray(stackItems.stackGroupId, stackGroupIds),
+    columns: {
+      id: true,
+      stackGroupId: true,
+      name: true,
+      imageLink: true,
+    },
+  });
+
+  const projectsData = await db.query.projects.findMany({
+    where: eq(projects.userId, userPayload.id),
+    columns: {
+      id: true,
+      title: true,
+      description: true,
+      imageLink: true,
+      demoLink: true,
+      codeLink: true,
+    },
+  });
+
+  const projectTagsData = await db.query.projectTags.findMany({
+    where: inArray(
+      projectTags.projectId,
+      projectsData.map((project) => project.id)
+    ),
+    columns: {
+      id: true,
+      projectId: true,
+      title: true,
+    },
+  });
+
+  const blogsData = await db.query.blogs.findMany({
+    where: eq(blogs.userId, userPayload.id),
+    columns: {
+      id: true,
+      title: true,
+      description: true,
+      blogText: true,
+    },
+  });
+
+  return {
+    user: user,
+    userAbout: userAboutData,
+    contactDetails: contactDetailsData,
+    stackItems: stackItemsData,
+    stackGroups: stackGroupsData,
+    projects: projectsData,
+    projectTags: projectTagsData,
+    blogs: blogsData,
+  };
 }
 
 export async function updateUserProfile(
