@@ -7,8 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { UserDashboard } from "@/lib/types";
+import { appClient } from "@/lib/client.ts/appClient";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
-interface UserProfile {
+export interface UserProfile {
   first_name: string;
   last_name: string;
   bio: string;
@@ -17,14 +21,21 @@ interface UserProfile {
   email: string;
 }
 
-export default function ProfileTab() {
+const submitFormData = async (profile: UserProfile) => {
+  console.log("Updating profile:", profile);
+  await appClient.changeUserDashboardProfile(profile);
+};
+
+export default function ProfileTab({ user }: { user: UserDashboard }) {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [profile, setProfile] = useState<UserProfile>({
-    first_name: "John",
-    last_name: "Doe",
-    bio: "I own a computer.",
-    designation: "Software Developer",
-    user_name: "johndoe",
-    email: "john.doe@example.com",
+    first_name: user.firstName,
+    last_name: user.lastName,
+    bio: user.bio,
+    designation: user.designation ?? "",
+    user_name: user.userName,
+    email: user.email,
   });
 
   const handleChange = (
@@ -34,11 +45,23 @@ export default function ProfileTab() {
     setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Updating profile:", profile);
-    // Implement API call to update profile
+    mutation.mutate(profile);
   };
+
+  const mutation = useMutation({
+    mutationFn: async (profile: UserProfile) => {
+      await submitFormData(profile);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/get/user/dashboard"] });
+      toast({
+        title: "Update: successful",
+        description: new Date().toLocaleString(),
+      });
+    },
+  });
 
   return (
     <div className="space-y-6">
@@ -82,6 +105,7 @@ export default function ProfileTab() {
             value={profile.user_name}
             onChange={handleChange}
             className="bg-gray-900 border-gray-700"
+            disabled
           />
           <p className="text-sm text-gray-400">
             This is your public display name. It can be your real name or a

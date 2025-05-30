@@ -12,3 +12,12 @@ export const signUpSchema = z.object({
   lastName: z.string().min(1).max(25),
   bio: z.string().min(1),
 });
+
+export const profileTabValidatorSchema = z.object({
+  first_name: z.string(),
+  last_name: z.string(),
+  bio: z.string(),
+  designation: z.string(),
+  user_name: z.string(),
+  email: z.string(),
+});

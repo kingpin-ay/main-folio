@@ -1,8 +1,7 @@
 "use client";
 
 import type React from "react";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ProfileTab from "./tabs/profile-tab";
@@ -13,6 +12,7 @@ import ProjectsTab from "./tabs/projects-tab";
 import BlogsTab from "./tabs/blogs-tab";
 import { Button } from "@/components/ui/button";
 import { UserDashboard } from "@/lib/types";
+
 type Tab =
   | "profile"
   | "about"
@@ -26,8 +26,28 @@ interface UserSettingsProps {
   user: UserDashboard;
 }
 
-export default function UserSettings({ logout }: UserSettingsProps) {
+
+const navItems: { id: Tab; label: string }[] = [
+  { id: "profile", label: "Profile" },
+  { id: "about", label: "About" },
+  { id: "contacts", label: "Contacts" },
+  { id: "preferences", label: "Preferences" },
+  { id: "projects", label: "Projects" },
+  { id: "blogs", label: "Blogs" },
+];
+
+export default function UserSettings({ logout, user }: UserSettingsProps) {
   const [activeTab, setActiveTab] = useState<Tab>("profile");
+
+  useEffect(() => {
+    console.log('UserSettings - Received user data:', user);
+  }, [user]);
+
+  // Validate user data
+  if (!user || typeof user !== 'object') {
+    console.error('UserSettings - Invalid user data:', user);
+    return <div>Error: Invalid user data</div>;
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -42,42 +62,15 @@ export default function UserSettings({ logout }: UserSettingsProps) {
         {/* Sidebar Navigation */}
         <div className="w-full md:w-64 flex flex-col">
           <div className="space-y-1 flex-1">
-            <NavItem
-              active={activeTab === "profile"}
-              onClick={() => setActiveTab("profile")}
-            >
-              Profile
-            </NavItem>
-            <NavItem
-              active={activeTab === "about"}
-              onClick={() => setActiveTab("about")}
-            >
-              About
-            </NavItem>
-            <NavItem
-              active={activeTab === "contacts"}
-              onClick={() => setActiveTab("contacts")}
-            >
-              Contacts
-            </NavItem>
-            <NavItem
-              active={activeTab === "preferences"}
-              onClick={() => setActiveTab("preferences")}
-            >
-              Preferences
-            </NavItem>
-            <NavItem
-              active={activeTab === "projects"}
-              onClick={() => setActiveTab("projects")}
-            >
-              Projects
-            </NavItem>
-            <NavItem
-              active={activeTab === "blogs"}
-              onClick={() => setActiveTab("blogs")}
-            >
-              Blogs
-            </NavItem>
+            {navItems.map((item) => (
+              <NavItem
+                key={item.id}
+                active={activeTab === item.id}
+                onClick={() => setActiveTab(item.id)}
+              >
+                {item.label}
+              </NavItem>
+            ))}
           </div>
           <Button
             variant="ghost"
@@ -91,7 +84,7 @@ export default function UserSettings({ logout }: UserSettingsProps) {
 
         {/* Main Content */}
         <div className="flex-1 border border-gray-800 rounded-lg p-6">
-          {activeTab === "profile" && <ProfileTab />}
+          {activeTab === "profile" && <ProfileTab user={user} />}
           {activeTab === "about" && <AboutTab />}
           {activeTab === "contacts" && <ContactsTab />}
           {activeTab === "preferences" && <PreferencesTab />}
