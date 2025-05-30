@@ -1,38 +1,52 @@
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { appClient } from '@/lib/client.ts/appClient'
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { appClient } from "@/lib/client.ts/appClient";
 
 export const useAuth = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await appClient.verify()
-      if (response.status === 200) {
-        return true
+      try {
+        const response = await appClient.verify();
+        return response.status === 200 && response.data !== null;
+      } catch (error) {
+        return false;
       }
-      return false
-    }
+    };
 
     const handleAuth = async () => {
-      const isAuthenticated = await checkAuth()
-      const isLoginPage = window.location.pathname === '/login'
-      const isDashboardPage = window.location.pathname.startsWith('/dashboard')
+      const isAuthenticated = await checkAuth();
+      const isLoginPage = window.location.pathname === "/login";
+      const isDashboardPage = window.location.pathname.startsWith("/dashboard");
 
-      if (isAuthenticated && isLoginPage) {
-        router.push('/dashboard')
-      } else if (!isAuthenticated && isDashboardPage) {
-        router.push('/login')
+      if (!isAuthenticated && isDashboardPage) {
+        router.push("/login");
+      } else if (isAuthenticated && isLoginPage) {
+        router.push("/dashboard");
       }
-    }
+    };
 
-    handleAuth()
-  }, [router])
+    handleAuth();
+  }, [router]);
 
   return {
     verify: async () => {
-      const response = await appClient.verify()
-      return response.status === 200
-    }
-  }
-} 
+      try {
+        const response = await appClient.verify();
+        if (response.status !== 200 || response.data === null) {
+          setTimeout(() => {
+            router.replace("/login");
+          }, 0);
+          return false;
+        }
+        return true;
+      } catch (error) {
+        setTimeout(() => {
+          router.replace("/login");
+        }, 0);
+        return false;
+      }
+    },
+  };
+};

@@ -2,7 +2,9 @@
 import { Hono } from "hono";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { Variables } from "../../lib/types/user.type.controller";
-import { getUserDashboard } from "../service/user.service";
+import { getUserDashboard, updateUserProfile } from "../service/user.service";
+import { validator } from "hono/validator";
+import { profileTabValidator } from "../../lib/validator/dashboard.validator";
 
 const app = new Hono<{ Variables: Variables }>();
 
@@ -25,5 +27,21 @@ app.get("/get/user/dashboard", async (c) => {
     message: "Authorized",
   });
 });
+
+app.post(
+  "/post/user/dashboard/profile",
+  validator("json", profileTabValidator),
+  async (c) => {
+    const body = c.req.valid("json");
+    const userPayload = c.get("user");
+    const user = await updateUserProfile(userPayload, body);
+
+    return c.json({
+      data: user,
+      status: 200,
+      message: "Profile updated successfully",
+    });
+  }
+);
 
 export default app;

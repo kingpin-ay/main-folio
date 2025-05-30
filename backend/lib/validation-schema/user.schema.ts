@@ -7,7 +7,17 @@ export const loginSchema = z.object({
 export const signUpSchema = z.object({
   userName: z.string().min(8),
   password: z.string().min(8),
+  email: z.string().email(),
   firstName: z.string().min(1).max(25),
   lastName: z.string().min(1).max(25),
   bio: z.string().min(1),
+});
+
+export const profileTabValidatorSchema = z.object({
+  first_name: z.string(),
+  last_name: z.string(),
+  bio: z.string(),
+  designation: z.string(),
+  user_name: z.string(),
+  email: z.string(),
 });

@@ -2,6 +2,10 @@ import { db } from "../db";
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { UserPayload } from "../../lib/types/user.type.controller";
+import { profileTabValidatorSchema } from "../../lib/validation-schema/user.schema";
+import { z } from "zod";
+
+export type UserProfile = z.infer<typeof profileTabValidatorSchema>;
 
 export async function getUserDashboard(userPayload: UserPayload) {
   const user = await db.query.users.findFirst({
@@ -12,6 +16,7 @@ export async function getUserDashboard(userPayload: UserPayload) {
       firstName: true,
       lastName: true,
       bio: true,
+      email: true,
     },
   });
 
@@ -20,4 +25,20 @@ export async function getUserDashboard(userPayload: UserPayload) {
   }
 
   return user;
+}
+
+export async function updateUserProfile(
+  userPayload: UserPayload,
+  body: UserProfile
+) {
+  try {
+    const user = await db
+      .update(users)
+      .set(body)
+      .where(eq(users.id, userPayload.id));
+
+    return user;
+  } catch (error) {
+    throw new Error("User not found");
+  }
 }

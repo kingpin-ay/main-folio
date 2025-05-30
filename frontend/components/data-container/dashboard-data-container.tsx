@@ -1,32 +1,33 @@
 "use client";
 
 import { appClient } from "@/lib/client.ts/appClient";
+import { UserDashboard } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
+import { StateHandler } from "@/components/ui/state-handler";
 
-export const DashboardDataContainer = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const { data, isLoading, error } = useQuery({
+function useDasboard() {
+  return useQuery({
     queryKey: ["/get/user/dashboard"],
-    queryFn: () => {
-      return appClient.getUserDashboard();
+    queryFn: async () => {
+      const response = await appClient.getUserDashboard();
+      if (response.status === 200) {
+        return response.data;
+      }
+      return null;
     },
   });
+}
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+export const DashboardDataContainer = ({
+  render,
+}: {
+  render: (data: UserDashboard) => React.ReactNode;
+}) => {
+  const { status, data, isLoading, error, isFetching } = useDasboard();
 
   return (
-    <div>
-      {JSON.stringify(data)}
-      {children}
-    </div>
+    <StateHandler isLoading={isLoading} error={error} data={data}>
+      {data && render(data)}
+    </StateHandler>
   );
 };

@@ -4,4 +4,5 @@ export interface UserDashboard {
     bio: string;
     designation: string | null;
     userName: string;
+    email: string;
 }

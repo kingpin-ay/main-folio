@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { UserDashboard } from "../types";
+import { UserProfile } from "@/components/tabs/profile-tab";
 
 type GetResponseType<T> = {
   data: T | null;
@@ -136,6 +137,38 @@ class AppClient {
           message: response.statusText,
         };
       }
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          data: null,
+          status: error.response?.status ?? 500,
+          message: error.response?.statusText ?? "An error occurred",
+        };
+      }
+      return {
+        data: null,
+        status: 500,
+        message: "An unexpected error occurred",
+      };
+    }
+  }
+
+  async changeUserDashboardProfile(
+    profile: UserProfile
+  ): Promise<{ message: string; status: number; data: any }> {
+    try {
+      const response = await this.axiosInstance.post(
+        `${this.baseUrl}/users/post/user/dashboard/profile`,
+        profile,
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
       return this.responseObjectBuilder(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
