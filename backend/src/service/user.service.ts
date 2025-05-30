@@ -1,5 +1,5 @@
 import { db } from "../db";
-import { users } from "../db/schema";
+import { userAbout, users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { UserPayload } from "../../lib/types/user.type.controller";
 import { profileTabValidatorSchema } from "../../lib/validation-schema/user.schema";
@@ -20,11 +20,23 @@ export async function getUserDashboard(userPayload: UserPayload) {
     },
   });
 
+  const userAboutData = await db.query.userAbout.findFirst({
+    where: eq(userAbout.userId, userPayload.id),
+    columns: {
+      shortDescription: true,
+      description: true,
+      imageLink: true,
+      email: true,
+      phoneNumber: true,
+      location: true,
+    },
+  });
+
   if (!user) {
     throw new Error("User not found");
   }
 
-  return user;
+  return { user: user, userAbout: userAboutData };
 }
 
 export async function updateUserProfile(

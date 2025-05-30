@@ -23,9 +23,8 @@ type Tab =
 
 interface UserSettingsProps {
   logout: () => Promise<void>;
-  user: UserDashboard;
+  data: UserDashboard;
 }
-
 
 const navItems: { id: Tab; label: string }[] = [
   { id: "profile", label: "Profile" },
@@ -36,16 +35,16 @@ const navItems: { id: Tab; label: string }[] = [
   { id: "blogs", label: "Blogs" },
 ];
 
-export default function UserSettings({ logout, user }: UserSettingsProps) {
+export default function UserSettings({ logout, data }: UserSettingsProps) {
   const [activeTab, setActiveTab] = useState<Tab>("profile");
-
+  const { user, userAbout } = data;
   useEffect(() => {
-    console.log('UserSettings - Received user data:', user);
-  }, [user]);
+    console.log("UserSettings - Received user data:", data);
+  }, [data]);
 
   // Validate user data
-  if (!user || typeof user !== 'object') {
-    console.error('UserSettings - Invalid user data:', user);
+  if (!user || typeof user !== "object") {
+    console.error("UserSettings - Invalid user data:", user);
     return <div>Error: Invalid user data</div>;
   }
 
