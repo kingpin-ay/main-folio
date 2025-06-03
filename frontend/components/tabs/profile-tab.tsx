@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { UserDashboard } from "@/lib/types";
+import { User } from "@/lib/types";
 import { appClient } from "@/lib/client.ts/appClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -26,7 +26,7 @@ const submitFormData = async (profile: UserProfile) => {
   await appClient.changeUserDashboardProfile(profile);
 };
 
-export default function ProfileTab({ user }: { user: UserDashboard }) {
+export default function ProfileTab({ user }: { user: User }) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [profile, setProfile] = useState<UserProfile>({

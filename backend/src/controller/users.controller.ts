@@ -2,9 +2,19 @@
 import { Hono } from "hono";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { Variables } from "../../lib/types/user.type.controller";
-import { getUserDashboard, updateUserProfile } from "../service/user.service";
+import {
+  deleteUserContact,
+  getUserDashboard,
+  updateUserAbout,
+  updateUserContacts,
+  updateUserProfile,
+} from "../service/user.service";
 import { validator } from "hono/validator";
-import { profileTabValidator } from "../../lib/validator/dashboard.validator";
+import {
+  aboutTabValidator,
+  contactTabValidator,
+  profileTabValidator,
+} from "../../lib/validator/dashboard.validator";
 
 const app = new Hono<{ Variables: Variables }>();
 
@@ -44,4 +54,47 @@ app.post(
   }
 );
 
+app.post(
+  "/post/user/dashboard/about",
+  validator("json", aboutTabValidator),
+  async (c) => {
+    const body = c.req.valid("json");
+    const userPayload = c.get("user");
+
+    const user = await updateUserAbout(userPayload, body);
+
+    return c.json({
+      data: user,
+      status: 200,
+      message: "About updated successfully",
+    });
+  }
+);
+
+app.post(
+  "/post/user/dashboard/contacts",
+  validator("json", contactTabValidator),
+  async (c) => {
+    const body = c.req.valid("json");
+    const userPayload = c.get("user");
+
+    const user = await updateUserContacts(userPayload, body);
+
+    return c.json({
+      data: user,
+      status: 200,
+      message: "Contacts updated successfully",
+    });
+  }
+);
+
+app.delete("/delete/user/dashboard/contacts/:id", async (c) => {
+  const id = c.req.param("id");
+  const user = await deleteUserContact(Number(id));
+  return c.json({
+    data: user,
+    status: 200,
+    message: "Contact deleted successfully",
+  });
+});
 export default app;

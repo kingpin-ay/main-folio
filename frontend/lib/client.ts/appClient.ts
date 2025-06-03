@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { UserDashboard } from "../types";
+import { ContactDetails, UserAbout, UserDashboard } from "../types";
 import { UserProfile } from "@/components/tabs/profile-tab";
 
 type GetResponseType<T> = {
@@ -156,7 +156,7 @@ class AppClient {
 
   async changeUserDashboardProfile(
     profile: UserProfile
-  ): Promise<{ message: string; status: number; data: any }> {
+  ): Promise<{ message: string; status: number; data: UserProfile | null }> {
     try {
       const response = await this.axiosInstance.post(
         `${this.baseUrl}/users/post/user/dashboard/profile`,
@@ -185,6 +185,89 @@ class AppClient {
       };
     }
   }
-}
 
+  async updateUserAbout(
+    about: UserAbout
+  ): Promise<{ message: string; status: number; data: UserAbout | null }> {
+    try {
+      const response = await this.axiosInstance.post(
+        `${this.baseUrl}/users/post/user/dashboard/about`,
+        about,
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          data: null,
+          status: error.response?.status ?? 500,
+          message: error.response?.statusText ?? "An error occurred",
+        };
+      }
+      return {
+        data: null,
+        status: 500,
+        message: "An unexpected error occurred",
+      };
+    }
+  }
+
+  async updateUserContacts(
+    contacts: ContactDetails[]
+  ): Promise<{
+    message: string;
+    status: number;
+    data: ContactDetails[] | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.post(
+        `${this.baseUrl}/users/post/user/dashboard/contacts`,
+        { contacts: contacts },
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          data: null,
+          status: error.response?.status ?? 500,
+          message: error.response?.statusText ?? "An error occurred",
+        };
+      }
+      return {
+        data: null,
+        status: 500,
+        message: "An unexpected error occurred",
+      };
+    }
+  }
+
+  async deleteUserContact(
+    id: number
+  ): Promise<{ message: string; status: number; data: void | null }> {
+    try {
+      const response = await this.axiosInstance.delete(
+        `${this.baseUrl}/users/delete/user/dashboard/contacts/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+}
 export const appClient = new AppClient(process.env.NEXT_PUBLIC_BASE_URL ?? "");

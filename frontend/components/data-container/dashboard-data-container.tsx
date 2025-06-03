@@ -23,7 +23,7 @@ export const DashboardDataContainer = ({
 }: {
   render: (data: UserDashboard) => React.ReactNode;
 }) => {
-  const { status, data, isLoading, error, isFetching } = useDasboard();
+  const { data, isLoading, error } = useDasboard();
 
   return (
     <StateHandler isLoading={isLoading} error={error} data={data}>

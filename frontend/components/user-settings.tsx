@@ -23,9 +23,8 @@ type Tab =
 
 interface UserSettingsProps {
   logout: () => Promise<void>;
-  user: UserDashboard;
+  data: UserDashboard;
 }
-
 
 const navItems: { id: Tab; label: string }[] = [
   { id: "profile", label: "Profile" },
@@ -36,16 +35,16 @@ const navItems: { id: Tab; label: string }[] = [
   { id: "blogs", label: "Blogs" },
 ];
 
-export default function UserSettings({ logout, user }: UserSettingsProps) {
+export default function UserSettings({ logout, data }: UserSettingsProps) {
   const [activeTab, setActiveTab] = useState<Tab>("profile");
-
+  const { user, userAbout, contactDetails } = data;
   useEffect(() => {
-    console.log('UserSettings - Received user data:', user);
-  }, [user]);
+    console.log("UserSettings - Received user data:", data);
+  }, [data]);
 
   // Validate user data
-  if (!user || typeof user !== 'object') {
-    console.error('UserSettings - Invalid user data:', user);
+  if (!user || typeof user !== "object") {
+    console.error("UserSettings - Invalid user data:", user);
     return <div>Error: Invalid user data</div>;
   }
 
@@ -85,8 +84,10 @@ export default function UserSettings({ logout, user }: UserSettingsProps) {
         {/* Main Content */}
         <div className="flex-1 border border-gray-800 rounded-lg p-6">
           {activeTab === "profile" && <ProfileTab user={user} />}
-          {activeTab === "about" && <AboutTab />}
-          {activeTab === "contacts" && <ContactsTab />}
+          {activeTab === "about" && <AboutTab userAbout={userAbout} />}
+          {activeTab === "contacts" && (
+            <ContactsTab userContacts={contactDetails} />
+          )}
           {activeTab === "preferences" && <PreferencesTab />}
           {activeTab === "projects" && <ProjectsTab />}
           {activeTab === "blogs" && <BlogsTab />}
