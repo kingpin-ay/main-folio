@@ -249,5 +249,21 @@ class AppClient {
       };
     }
   }
+
+  async deleteUserContact(
+    id: number
+  ): Promise<{ message: string; status: number; data: any }> {
+    try {
+      const response = await this.axiosInstance.delete(
+        `${this.baseUrl}/users/delete/user/dashboard/contacts/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export const appClient = new AppClient(process.env.NEXT_PUBLIC_BASE_URL ?? "");

@@ -230,3 +230,14 @@ export async function updateUserContacts(
     throw new Error("User not found");
   }
 }
+
+export async function deleteUserContact(id: number) {
+  try {
+    const userContact = await db
+      .delete(contactDetails)
+      .where(eq(contactDetails.id, id));
+    return userContact;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}

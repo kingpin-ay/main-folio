@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { Variables } from "../../lib/types/user.type.controller";
 import {
+  deleteUserContact,
   getUserDashboard,
   updateUserAbout,
   updateUserContacts,
@@ -87,4 +88,13 @@ app.post(
   }
 );
 
+app.delete("/delete/user/dashboard/contacts/:id", async (c) => {
+  const id = c.req.param("id");
+  const user = await deleteUserContact(Number(id));
+  return c.json({
+    data: user,
+    status: 200,
+    message: "Contact deleted successfully",
+  });
+});
 export default app;

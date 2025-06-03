@@ -43,8 +43,13 @@ export default function ContactsTab({
     setNewContact({ id: 0, link: "", linkType: "GITHUB" });
   };
 
-  const handleDeleteContact = (idx: number) => {
-    setContacts(contacts.filter((_, i) => i !== idx));
+  const handleDeleteContact = async (id: number, idx: number) => {
+    if (id === 0) {
+      setContacts(contacts.filter((_, i) => i !== idx));
+    } else {
+      setContacts(contacts.filter((contact) => contact.id !== id));
+      await appClient.deleteUserContact(id);
+    }
   };
 
   const handleNewContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +133,7 @@ export default function ContactsTab({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => handleDeleteContact(idx)}
+                onClick={() => handleDeleteContact(contact.id , idx)}
                 className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
               >
                 <Trash2 className="h-4 w-4" />
