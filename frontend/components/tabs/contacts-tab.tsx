@@ -13,35 +13,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ContactDetails } from "@/lib/types";
+import { toast } from "@/hooks/use-toast";
+import { appClient } from "@/lib/client.ts/appClient";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface ContactDetail {
-  id: string;
-  link: string;
-  link_type: string;
-}
+const handleSaveAll = async (contacts: ContactDetails[]) => {
+  console.log("Saving all contacts:", contacts);
+  const response = await appClient.updateUserContacts(contacts);
+};
 
-export default function ContactsTab() {
-  const [contacts, setContacts] = useState<ContactDetail[]>([
-    { id: "1", link: "https://github.com/johndoe", link_type: "github" },
-    { id: "2", link: "https://twitter.com/johndoe", link_type: "twitter" },
-    { id: "3", link: "https://linkedin.com/in/johndoe", link_type: "linkedin" },
-  ]);
+export default function ContactsTab({
+  userContacts,
+}: {
+  userContacts: ContactDetails[];
+}) {
+  const queryClient = useQueryClient();
+  const [contacts, setContacts] = useState<ContactDetails[]>(userContacts);
 
-  const [newContact, setNewContact] = useState<Omit<ContactDetail, "id">>({
+  const [newContact, setNewContact] = useState<ContactDetails>({
+    id: 0,
     link: "",
-    link_type: "website",
+    linkType: "GITHUB",
   });
 
   const handleAddContact = () => {
     if (!newContact.link) return;
-
-    const id = Math.random().toString(36).substring(2, 9);
-    setContacts([...contacts, { ...newContact, id }]);
-    setNewContact({ link: "", link_type: "website" });
+    setContacts([...contacts, newContact]);
+    setNewContact({ id: 0, link: "", linkType: "GITHUB" });
   };
 
-  const handleDeleteContact = (id: string) => {
-    setContacts(contacts.filter((contact) => contact.id !== id));
+  const handleDeleteContact = (idx: number) => {
+    setContacts(contacts.filter((_, i) => i !== idx));
   };
 
   const handleNewContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,12 +52,42 @@ export default function ContactsTab() {
   };
 
   const handleNewContactTypeChange = (value: string) => {
-    setNewContact({ ...newContact, link_type: value });
+    setNewContact({
+      ...newContact,
+      linkType: value as ContactDetails["linkType"],
+    });
   };
 
-  const handleSaveAll = () => {
-    console.log("Saving all contacts:", contacts);
-    // Implement API call to save all contacts
+  const handleContactChange = (idx: number, value: string) => {
+    const updatedContacts = contacts.map((c, i) =>
+      i === idx ? { ...c, link: value } : c
+    );
+    setContacts(updatedContacts);
+  };
+
+  const handleContactTypeChange = (idx: number, value: string) => {
+    const updatedContacts = contacts.map((c, i) =>
+      i === idx ? { ...c, linkType: value as ContactDetails["linkType"] } : c
+    );
+    setContacts(updatedContacts);
+  };
+
+  const mutation = useMutation({
+    mutationFn: async (contacts: ContactDetails[]) => {
+      await handleSaveAll(contacts);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/get/user/dashboard"] });
+      toast({
+        title: "Update: successful",
+        description: new Date().toLocaleString(),
+      });
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate(contacts);
   };
 
   return (
@@ -67,53 +100,41 @@ export default function ContactsTab() {
       </div>
 
       <div className="space-y-4">
-        {contacts.map((contact) => (
-          <div key={contact.id} className="flex items-center gap-3">
-            <div className="flex-1">
-              <Input
-                value={contact.link}
-                onChange={(e) => {
-                  const updatedContacts = contacts.map((c) =>
-                    c.id === contact.id ? { ...c, link: e.target.value } : c
-                  );
-                  setContacts(updatedContacts);
-                }}
-                className="bg-gray-900 border-gray-700"
-              />
+        {contacts &&
+          contacts.map((contact, idx) => (
+            <div key={idx} className="flex items-center gap-3">
+              <div className="flex-1">
+                <Input
+                  value={contact.link}
+                  onChange={(e) => handleContactChange(idx, e.target.value)}
+                  className="bg-gray-900 border-gray-700"
+                />
+              </div>
+              <Select
+                value={contact.linkType}
+                onValueChange={(value) => handleContactTypeChange(idx, value)}
+              >
+                <SelectTrigger className="w-[180px] bg-gray-900 border-gray-700">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="GITHUB">GitHub</SelectItem>
+                  <SelectItem value="YOUTUBE">YouTube</SelectItem>
+                  <SelectItem value="X">X</SelectItem>
+                  <SelectItem value="MAIL">Mail</SelectItem>
+                  <SelectItem value="LINKEDLN">LinkedIn</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleDeleteContact(idx)}
+                className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </div>
-            <Select
-              value={contact.link_type}
-              onValueChange={(value) => {
-                const updatedContacts = contacts.map((c) =>
-                  c.id === contact.id ? { ...c, link_type: value } : c
-                );
-                setContacts(updatedContacts);
-              }}
-            >
-              <SelectTrigger className="w-[180px] bg-gray-900 border-gray-700">
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="website">Website</SelectItem>
-                <SelectItem value="github">GitHub</SelectItem>
-                <SelectItem value="twitter">Twitter</SelectItem>
-                <SelectItem value="linkedin">LinkedIn</SelectItem>
-                <SelectItem value="facebook">Facebook</SelectItem>
-                <SelectItem value="instagram">Instagram</SelectItem>
-                <SelectItem value="youtube">YouTube</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handleDeleteContact(contact.id)}
-              className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
+          ))}
 
         <div className="flex items-center gap-3 pt-2">
           <div className="flex-1">
@@ -125,21 +146,18 @@ export default function ContactsTab() {
             />
           </div>
           <Select
-            value={newContact.link_type}
+            value={newContact.linkType}
             onValueChange={handleNewContactTypeChange}
           >
             <SelectTrigger className="w-[180px] bg-gray-900 border-gray-700">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="website">Website</SelectItem>
-              <SelectItem value="github">GitHub</SelectItem>
-              <SelectItem value="twitter">Twitter</SelectItem>
-              <SelectItem value="linkedin">LinkedIn</SelectItem>
-              <SelectItem value="facebook">Facebook</SelectItem>
-              <SelectItem value="instagram">Instagram</SelectItem>
-              <SelectItem value="youtube">YouTube</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
+              <SelectItem value="GITHUB">GitHub</SelectItem>
+              <SelectItem value="YOUTUBE">YouTube</SelectItem>
+              <SelectItem value="X">X</SelectItem>
+              <SelectItem value="MAIL">Mail</SelectItem>
+              <SelectItem value="LINKEDLN">LinkedIn</SelectItem>
             </SelectContent>
           </Select>
           <Button
@@ -153,7 +171,7 @@ export default function ContactsTab() {
         </div>
       </div>
 
-      <Button onClick={handleSaveAll} className="ml-auto">
+      <Button onClick={handleSubmit} className="ml-auto">
         Save all contacts
       </Button>
     </div>

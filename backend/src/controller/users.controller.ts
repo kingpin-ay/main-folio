@@ -5,11 +5,13 @@ import { Variables } from "../../lib/types/user.type.controller";
 import {
   getUserDashboard,
   updateUserAbout,
+  updateUserContacts,
   updateUserProfile,
 } from "../service/user.service";
 import { validator } from "hono/validator";
 import {
   aboutTabValidator,
+  contactTabValidator,
   profileTabValidator,
 } from "../../lib/validator/dashboard.validator";
 
@@ -64,6 +66,23 @@ app.post(
       data: user,
       status: 200,
       message: "About updated successfully",
+    });
+  }
+);
+
+app.post(
+  "/post/user/dashboard/contacts",
+  validator("json", contactTabValidator),
+  async (c) => {
+    const body = c.req.valid("json");
+    const userPayload = c.get("user");
+
+    const user = await updateUserContacts(userPayload, body);
+
+    return c.json({
+      data: user,
+      status: 200,
+      message: "Contacts updated successfully",
     });
   }
 );

@@ -10,6 +10,7 @@ export interface UserDashboard {
 }
 
 export interface ContactDetails {
+  id: number;
   link: string;
   linkType: "GITHUB" | "YOUTUBE" | "X" | "MAIL" | "LINKEDLN";
 }

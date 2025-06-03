@@ -30,3 +30,17 @@ export const aboutTabValidatorSchema = z.object({
   phoneNumber: z.string(),
   location: z.string(),
 });
+
+export const contactTabValidatorSchema = z.object({
+  contacts: z.array(
+    z.object({
+      id: z.number().optional(),
+      link: z.string(),
+      linkType: z
+        .string()
+        .transform(
+          (val) => val as "GITHUB" | "YOUTUBE" | "X" | "MAIL" | "LINKEDLN"
+        ),
+    })
+  ),
+});

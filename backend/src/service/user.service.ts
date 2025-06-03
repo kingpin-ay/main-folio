@@ -14,11 +14,13 @@ import { UserPayload } from "../../lib/types/user.type.controller";
 import {
   profileTabValidatorSchema,
   aboutTabValidatorSchema,
+  contactTabValidatorSchema,
 } from "../../lib/validation-schema/user.schema";
 import { z } from "zod";
 
 export type UserProfile = z.infer<typeof profileTabValidatorSchema>;
 export type UserAbout = z.infer<typeof aboutTabValidatorSchema>;
+export type ContactDetails = z.infer<typeof contactTabValidatorSchema>;
 
 export async function getUserDashboard(userPayload: UserPayload) {
   const user = await db.query.users.findFirst({
@@ -52,6 +54,7 @@ export async function getUserDashboard(userPayload: UserPayload) {
   const contactDetailsData = await db.query.contactDetails.findMany({
     where: eq(contactDetails.userId, userPayload.id),
     columns: {
+      id: true,
       link: true,
       linkType: true,
     },
@@ -167,6 +170,63 @@ export async function updateUserAbout(
       return userAboutData;
     }
   } catch (error) {
+    throw new Error("User not found");
+  }
+}
+
+export async function updateUserContacts(
+  userPayload: UserPayload,
+  body: ContactDetails
+) {
+  try {
+    const newContacts = body.contacts.map((contact) => ({
+      ...contact,
+      userId: userPayload.id,
+      linkType: contact.linkType as
+        | "GITHUB"
+        | "YOUTUBE"
+        | "X"
+        | "MAIL"
+        | "LINKEDLN",
+    }));
+    const tobeInsertedContacts = newContacts
+      .filter(
+        (contact): contact is typeof contact & { id: number } =>
+          typeof contact.id === "number" && contact.id === 0
+      )
+      .map((contact) => ({
+        link: contact.link,
+        userId: userPayload.id,
+        linkType: contact.linkType as
+          | "GITHUB"
+          | "YOUTUBE"
+          | "X"
+          | "MAIL"
+          | "LINKEDLN",
+      }));
+    const tobeUpdatedContacts = newContacts.filter(
+      (contact): contact is typeof contact & { id: number } =>
+        typeof contact.id === "number" && contact.id !== 0
+    );
+    // create new rows in the contactDetails table
+    let newUserContacts;
+    if (tobeInsertedContacts.length > 0) {
+      newUserContacts = await db
+        .insert(contactDetails)
+        .values(tobeInsertedContacts);
+    }
+    // update the existing rows in the contactDetails table
+    if (tobeUpdatedContacts.length > 0) {
+      for (const contact of tobeUpdatedContacts) {
+        await db
+          .update(contactDetails)
+          .set({ link: contact.link, linkType: contact.linkType })
+          .where(eq(contactDetails.id, contact.id as number));
+      }
+    }
+    return newUserContacts;
+  } catch (error) {
+    console.log(error);
     throw new Error("User not found");
   }
 }
