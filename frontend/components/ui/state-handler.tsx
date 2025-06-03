@@ -1,13 +1,13 @@
 import { Loader2 } from "lucide-react";
 
-interface StateHandlerProps {
+type StateHandlerProps<T = unknown> = {
   isLoading: boolean;
   error: Error | null;
-  data: any | null;
+  data: T | null;
   children: React.ReactNode;
-}
+};
 
-export function StateHandler({ isLoading, error, data, children }: StateHandlerProps) {
+export function StateHandler<T = unknown>({ isLoading, error, data, children }: StateHandlerProps<T>) {
   if (isLoading) {
     return (
       <div className="flex h-[50vh] items-center justify-center">

@@ -156,7 +156,7 @@ class AppClient {
 
   async changeUserDashboardProfile(
     profile: UserProfile
-  ): Promise<{ message: string; status: number; data: any }> {
+  ): Promise<{ message: string; status: number; data: UserProfile | null }> {
     try {
       const response = await this.axiosInstance.post(
         `${this.baseUrl}/users/post/user/dashboard/profile`,
@@ -188,7 +188,7 @@ class AppClient {
 
   async updateUserAbout(
     about: UserAbout
-  ): Promise<{ message: string; status: number; data: any }> {
+  ): Promise<{ message: string; status: number; data: UserAbout | null }> {
     try {
       const response = await this.axiosInstance.post(
         `${this.baseUrl}/users/post/user/dashboard/about`,
@@ -220,7 +220,11 @@ class AppClient {
 
   async updateUserContacts(
     contacts: ContactDetails[]
-  ): Promise<{ message: string; status: number; data: any }> {
+  ): Promise<{
+    message: string;
+    status: number;
+    data: ContactDetails[] | null;
+  }> {
     try {
       const response = await this.axiosInstance.post(
         `${this.baseUrl}/users/post/user/dashboard/contacts`,
@@ -252,7 +256,7 @@ class AppClient {
 
   async deleteUserContact(
     id: number
-  ): Promise<{ message: string; status: number; data: any }> {
+  ): Promise<{ message: string; status: number; data: void | null }> {
     try {
       const response = await this.axiosInstance.delete(
         `${this.baseUrl}/users/delete/user/dashboard/contacts/${id}`,

@@ -21,6 +21,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const handleSaveAll = async (contacts: ContactDetails[]) => {
   console.log("Saving all contacts:", contacts);
   const response = await appClient.updateUserContacts(contacts);
+  return response;
 };
 
 export default function ContactsTab({
