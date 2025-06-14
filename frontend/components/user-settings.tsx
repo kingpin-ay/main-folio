@@ -37,7 +37,7 @@ const navItems: { id: Tab; label: string }[] = [
 
 export default function UserSettings({ logout, data }: UserSettingsProps) {
   const [activeTab, setActiveTab] = useState<Tab>("profile");
-  const { user, userAbout, contactDetails, stackGroups } = data;
+  const { user, userAbout, contactDetails, stackGroups, projects } = data;
   useEffect(() => {
     console.log("UserSettings - Received user data:", data);
   }, [data]);
@@ -91,7 +91,7 @@ export default function UserSettings({ logout, data }: UserSettingsProps) {
           {activeTab === "preferences" && (
             <PreferencesTab stackGroupsMain={stackGroups} />
           )}
-          {activeTab === "projects" && <ProjectsTab />}
+          {activeTab === "projects" && <ProjectsTab projects_main={projects} />}
           {activeTab === "blogs" && <BlogsTab />}
         </div>
       </div>

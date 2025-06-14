@@ -5,6 +5,7 @@ import {
   StackItem,
   UserAbout,
   UserDashboard,
+  Project,
 } from "../types";
 import { UserProfile } from "@/components/tabs/profile-tab";
 
@@ -337,6 +338,47 @@ class AppClient {
     try {
       const response = await this.axiosInstance.delete(
         `${this.baseUrl}/users/delete/user/dashboard/stack-groups/${stackGroupId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateUserProjects(projects: Project[]): Promise<{
+    message: string;
+    status: number;
+    data: Project[] | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.post(
+        `${this.baseUrl}/users/post/user/dashboard/projects`,
+        { projects: projects },
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteProject(id: number): Promise<{
+    message: string;
+    status: number;
+    data: void | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.delete(
+        `${this.baseUrl}/users/delete/user/dashboard/projects/${id}`,
         {
           withCredentials: true,
         }

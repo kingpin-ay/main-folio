@@ -2,7 +2,6 @@ import { db } from "../db";
 import {
   contactDetails,
   projects,
-  projectTags,
   stackGroups,
   stackItems,
   userAbout,
@@ -17,12 +16,22 @@ import {
   contactTabValidatorSchema,
   stackItemValidatorSchema,
   stackGroupValidatorSchema,
+  projectsValidatorSchema,
 } from "../../lib/validation-schema/user.schema";
 import { z } from "zod";
 
 export type UserProfile = z.infer<typeof profileTabValidatorSchema>;
 export type UserAbout = z.infer<typeof aboutTabValidatorSchema>;
 export type ContactDetails = z.infer<typeof contactTabValidatorSchema>;
+export type Projects = {
+  id: number;
+  title: string;
+  description: string;
+  imageLink: string;
+  demoLink: string;
+  codeLink: string;
+  tags: string[];
+};
 
 export interface StackItem {
   name: string;
@@ -103,18 +112,7 @@ export async function getUserDashboard(userPayload: UserPayload) {
       imageLink: true,
       demoLink: true,
       codeLink: true,
-    },
-  });
-
-  const projectTagsData = await db.query.projectTags.findMany({
-    where: inArray(
-      projectTags.projectId,
-      projectsData.map((project) => project.id)
-    ),
-    columns: {
-      id: true,
-      projectId: true,
-      title: true,
+      tags: true,
     },
   });
 
@@ -148,7 +146,6 @@ export async function getUserDashboard(userPayload: UserPayload) {
     contactDetails: contactDetailsData,
     stackGroups: stackGroupsMain,
     projects: projectsData,
-    projectTags: projectTagsData,
     blogs: blogsData,
   };
 }
@@ -361,6 +358,49 @@ export async function deleteStackGroup(stackGroupId: number) {
     return stackGroup;
   } catch (error) {
     console.log(error);
+    throw new Error("User not found");
+  }
+}
+
+export async function updateUserProjects(
+  userPayload: UserPayload,
+  body: Projects[]
+) {
+  try {
+    const projects_main = body.map((project) => ({
+      ...project,
+      userId: userPayload.id,
+    }));
+    const tobeInsertedProjects = projects_main.filter(
+      (project): project is typeof project & { id: number } =>
+        typeof project.id === "number" && project.id === 0
+    );
+
+    const project_data = tobeInsertedProjects.map((project) => ({
+      title: project.title,
+      description: project.description,
+      imageLink: project.imageLink,
+      demoLink: project.demoLink,
+      codeLink: project.codeLink,
+      tags: project.tags,
+      userId: userPayload.id,
+    }));
+
+    if (project_data.length > 0) {
+      await db.insert(projects).values(project_data);
+    }
+
+    return projects;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}
+
+export async function deleteProject(id: number) {
+  try {
+    const project = await db.delete(projects).where(eq(projects.id, id));
+    return project;
+  } catch (error) {
     throw new Error("User not found");
   }
 }

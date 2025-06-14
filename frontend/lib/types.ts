@@ -5,7 +5,6 @@ export interface UserDashboard {
   stackItems: StackItem[];
   stackGroups: StackGroup[];
   projects: Project[];
-  projectTags: ProjectTag[];
   blogs: Blog[];
 }
 
@@ -35,6 +34,7 @@ export interface Project {
   imageLink: string;
   demoLink: string;
   codeLink: string;
+  tags: string[];
 }
 
 export interface ProjectTag {

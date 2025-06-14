@@ -9,15 +9,18 @@ import {
   deleteUserContact,
   getUserDashboard,
   updateUserAbout,
+  updateUserProjects,
   updateUserContacts,
   updateUserProfile,
   updateUserStackGroups,
+  deleteProject,
 } from "../service/user.service";
 import { validator } from "hono/validator";
 import {
   aboutTabValidator,
   contactTabValidator,
   profileTabValidator,
+  projectsValidator,
   stackGroupValidator,
   stackItemValidator,
 } from "../../lib/validator/dashboard.validator";
@@ -155,6 +158,31 @@ app.delete("/delete/user/dashboard/stack-groups/:stackGroupId", async (c) => {
   const user = await deleteStackGroup(Number(stackGroupId));
   return c.json({
     data: user,
+  });
+});
+
+app.post(
+  "/post/user/dashboard/projects",
+  validator("json", projectsValidator),
+  async (c) => {
+    const body = c.req.valid("json");
+    const userPayload = c.get("user");
+    const user = await updateUserProjects(userPayload, body.projects);
+    return c.json({
+      data: {},
+      status: 200,
+      message: "Projects updated successfully",
+    });
+  }
+);
+
+app.delete("/delete/user/dashboard/projects/:id", async (c) => {
+  const id = c.req.param("id");
+  const user = await deleteProject(Number(id));
+  return c.json({
+    data: user,
+    status: 200,
+    message: "Project deleted successfully",
   });
 });
 
