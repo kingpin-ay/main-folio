@@ -329,5 +329,22 @@ class AppClient {
       throw error;
     }
   }
+  async deleteStackGroup(stackGroupId: number): Promise<{
+    message: string;
+    status: number;
+    data: void | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.delete(
+        `${this.baseUrl}/users/delete/user/dashboard/stack-groups/${stackGroupId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export const appClient = new AppClient(process.env.NEXT_PUBLIC_BASE_URL ?? "");

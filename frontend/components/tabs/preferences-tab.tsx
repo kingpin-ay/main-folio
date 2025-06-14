@@ -55,7 +55,13 @@ export default function PreferencesTab({
   };
 
   const handleDeleteGroup = (id: number) => {
-    setStackGroups(stackGroups.filter((group) => group.id !== id));
+    if (id === 0) {
+      setStackGroups(stackGroups.filter((group) => group.id !== id));
+    } else {
+      const response = appClient.deleteStackGroup(id);
+      setStackGroups(stackGroups.filter((group) => group.id !== id));
+      revalidateData.mutate();
+    }
   };
 
   const handleAddItem = (index: number) => {
@@ -81,6 +87,13 @@ export default function PreferencesTab({
             .catch((error) => {
               console.log(error);
             });
+          return {
+            ...group,
+            items: [
+              ...group.items,
+              { id, name: newItem.name, image_link: newItem.image_link },
+            ],
+          };
         }
       }
       return group;
@@ -108,10 +121,17 @@ export default function PreferencesTab({
         groupId,
         itemId
       );
-      if (response.status === 200) {
-        revalidateData.mutate();
-      }
-      return response;
+      const updatedGroups = stackGroups.map((group) => {
+        if (group.id === groupId) {
+          return {
+            ...group,
+            items: group.items.filter((item) => item.id !== itemId),
+          };
+        }
+        return group;
+      });
+      setStackGroups(updatedGroups);
+      revalidateData.mutate();
     }
   };
 

@@ -5,6 +5,7 @@ import { Variables } from "../../lib/types/user.type.controller";
 import {
   addStackGroupItem,
   deleteSingleStackGroupItem,
+  deleteStackGroup,
   deleteUserContact,
   getUserDashboard,
   updateUserAbout,
@@ -148,5 +149,13 @@ app.post(
     });
   }
 );
+
+app.delete("/delete/user/dashboard/stack-groups/:stackGroupId", async (c) => {
+  const stackGroupId = c.req.param("stackGroupId");
+  const user = await deleteStackGroup(Number(stackGroupId));
+  return c.json({
+    data: user,
+  });
+});
 
 export default app;

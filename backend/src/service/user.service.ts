@@ -349,3 +349,18 @@ export async function addStackGroupItem(
     throw new Error("User not found");
   }
 }
+
+export async function deleteStackGroup(stackGroupId: number) {
+  try {
+    const stackGroupItemsDelete = await db
+      .delete(stackItems)
+      .where(eq(stackItems.stackGroupId, stackGroupId));
+    const stackGroup = await db
+      .delete(stackGroups)
+      .where(eq(stackGroups.id, stackGroupId));
+    return stackGroup;
+  } catch (error) {
+    console.log(error);
+    throw new Error("User not found");
+  }
+}
