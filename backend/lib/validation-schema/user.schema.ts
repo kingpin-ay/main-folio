@@ -61,3 +61,10 @@ export const stackGroupValidatorSchema = z.object({
     })
   ),
 });
+
+export const stackItemValidatorSchema = z.object({
+  stackItem: z.object({
+    name: z.string(),
+    image_link: z.string(),
+  }),
+});

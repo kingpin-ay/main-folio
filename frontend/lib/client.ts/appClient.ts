@@ -1,5 +1,11 @@
 import axios, { AxiosResponse } from "axios";
-import { ContactDetails, StackGroup, UserAbout, UserDashboard } from "../types";
+import {
+  ContactDetails,
+  StackGroup,
+  StackItem,
+  UserAbout,
+  UserDashboard,
+} from "../types";
 import { UserProfile } from "@/components/tabs/profile-tab";
 
 type GetResponseType<T> = {
@@ -281,6 +287,41 @@ class AppClient {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteSingleStackGroupItem(
+    stackGroupId: number,
+    stackItemId: number
+  ): Promise<{ message: string; status: number; data: void | null }> {
+    try {
+      const response = await this.axiosInstance.delete(
+        `${this.baseUrl}/users/delete/user/dashboard/stack-groups/${stackGroupId}/items/${stackItemId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addStackGroupItem(
+    stackGroupId: number,
+    stackItem: StackItem
+  ): Promise<{ message: string; status: number; data: StackItem | null }> {
+    try {
+      const response = await this.axiosInstance.post(
+        `${this.baseUrl}/users/post/user/dashboard/stack-groups/${stackGroupId}/items`,
+        { stackItem: stackItem },
+        {
+          withCredentials: true,
         }
       );
       return this.responseObjectBuilder(response.data);

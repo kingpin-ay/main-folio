@@ -9,12 +9,14 @@ import {
   users,
   blogs,
 } from "../db/schema";
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { UserPayload } from "../../lib/types/user.type.controller";
 import {
   profileTabValidatorSchema,
   aboutTabValidatorSchema,
   contactTabValidatorSchema,
+  stackItemValidatorSchema,
+  stackGroupValidatorSchema,
 } from "../../lib/validation-schema/user.schema";
 import { z } from "zod";
 
@@ -23,7 +25,6 @@ export type UserAbout = z.infer<typeof aboutTabValidatorSchema>;
 export type ContactDetails = z.infer<typeof contactTabValidatorSchema>;
 
 export interface StackItem {
-  id: number;
   name: string;
   image_link: string;
 }
@@ -311,5 +312,40 @@ export async function updateUserStackGroups(
   } catch (error) {
     console.log(error);
     throw new Error(error as string);
+  }
+}
+
+export async function deleteSingleStackGroupItem(
+  stackGroupId: number,
+  stackItemId: number
+) {
+  try {
+    const stackItem = await db
+      .delete(stackItems)
+      .where(
+        and(
+          eq(stackItems.id, stackItemId),
+          eq(stackItems.stackGroupId, stackGroupId)
+        )
+      );
+    return stackItem;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}
+
+export async function addStackGroupItem(
+  stackGroupId: number,
+  stackItem: StackItem
+) {
+  try {
+    const newStackItem = await db.insert(stackItems).values({
+      name: stackItem.name,
+      imageLink: stackItem.image_link,
+      stackGroupId: stackGroupId,
+    });
+    return newStackItem;
+  } catch (error) {
+    throw new Error("User not found");
   }
 }

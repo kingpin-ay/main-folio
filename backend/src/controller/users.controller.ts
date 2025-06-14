@@ -3,6 +3,8 @@ import { Hono } from "hono";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { Variables } from "../../lib/types/user.type.controller";
 import {
+  addStackGroupItem,
+  deleteSingleStackGroupItem,
   deleteUserContact,
   getUserDashboard,
   updateUserAbout,
@@ -16,6 +18,7 @@ import {
   contactTabValidator,
   profileTabValidator,
   stackGroupValidator,
+  stackItemValidator,
 } from "../../lib/validator/dashboard.validator";
 
 const app = new Hono<{ Variables: Variables }>();
@@ -113,6 +116,35 @@ app.post(
       data: user,
       status: 200,
       message: "Stack groups updated successfully",
+    });
+  }
+);
+
+app.delete(
+  "/delete/user/dashboard/stack-groups/:stackGroupId/items/:stackItemId",
+  async (c) => {
+    const stackGroupId = c.req.param("stackGroupId");
+    const stackItemId = c.req.param("stackItemId");
+    const user = await deleteSingleStackGroupItem(
+      Number(stackGroupId),
+      Number(stackItemId)
+    );
+    return c.json({
+      data: user,
+    });
+  }
+);
+
+app.post(
+  "/post/user/dashboard/stack-groups/:stackGroupId/items",
+  validator("json", stackItemValidator),
+  async (c) => {
+    const stackGroupId = c.req.param("stackGroupId");
+    const body = c.req.valid("json");
+
+    const user = await addStackGroupItem(Number(stackGroupId), body.stackItem);
+    return c.json({
+      data: user,
     });
   }
 );

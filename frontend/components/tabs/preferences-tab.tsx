@@ -64,13 +64,24 @@ export default function PreferencesTab({
     const id = 0;
     const updatedGroups = stackGroups.map((group, inx) => {
       if (inx === index) {
-        return {
-          ...group,
-          items: [
-            ...group.items,
-            { id, name: newItem.name, image_link: newItem.image_link },
-          ],
-        };
+        if (group.id === 0) {
+          return {
+            ...group,
+            items: [
+              ...group.items,
+              { id, name: newItem.name, image_link: newItem.image_link },
+            ],
+          };
+        } else {
+          appClient
+            .addStackGroupItem(group.id, newItem)
+            .then((response) => {
+              revalidateData.mutate();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       }
       return group;
     });
@@ -79,24 +90,46 @@ export default function PreferencesTab({
     setNewItem({ id: 0, name: "", image_link: "" });
   };
 
-  const handleDeleteItem = (groupId: number, itemId: number) => {
-    const updatedGroups = stackGroups.map((group) => {
-      if (group.id === groupId) {
-        return {
-          ...group,
-          items: group.items.filter((item) => item.id !== itemId),
-        };
-      }
-      return group;
-    });
+  const handleDeleteItem = async (groupId: number, itemId: number) => {
+    if (groupId === 0) {
+      const updatedGroups = stackGroups.map((group) => {
+        if (group.id === groupId) {
+          return {
+            ...group,
+            items: group.items.filter((item) => item.id !== itemId),
+          };
+        }
+        return group;
+      });
 
-    setStackGroups(updatedGroups);
+      setStackGroups(updatedGroups);
+    } else {
+      const response = await appClient.deleteSingleStackGroupItem(
+        groupId,
+        itemId
+      );
+      if (response.status === 200) {
+        revalidateData.mutate();
+      }
+      return response;
+    }
   };
 
   const mutation = useMutation({
     mutationFn: async (stackGroups: StackGroup[]) => {
       await handleSaveAll(stackGroups);
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/get/user/dashboard"] });
+      toast({
+        title: "Update: successful",
+        description: new Date().toLocaleString(),
+      });
+    },
+  });
+
+  const revalidateData = useMutation({
+    mutationFn: async () => {},
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/get/user/dashboard"] });
       toast({
