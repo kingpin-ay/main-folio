@@ -58,7 +58,7 @@ export default function PreferencesTab({
     if (id === 0) {
       setStackGroups(stackGroups.filter((group) => group.id !== id));
     } else {
-      const response = appClient.deleteStackGroup(id);
+      appClient.deleteStackGroup(id);
       setStackGroups(stackGroups.filter((group) => group.id !== id));
       revalidateData.mutate();
     }
@@ -81,7 +81,7 @@ export default function PreferencesTab({
         } else {
           appClient
             .addStackGroupItem(group.id, newItem)
-            .then((response) => {
+            .then(() => {
               revalidateData.mutate();
             })
             .catch((error) => {
@@ -117,10 +117,7 @@ export default function PreferencesTab({
 
       setStackGroups(updatedGroups);
     } else {
-      const response = await appClient.deleteSingleStackGroupItem(
-        groupId,
-        itemId
-      );
+      await appClient.deleteSingleStackGroupItem(groupId, itemId);
       const updatedGroups = stackGroups.map((group) => {
         if (group.id === groupId) {
           return {
