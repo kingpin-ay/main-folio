@@ -44,3 +44,20 @@ export const contactTabValidatorSchema = z.object({
     })
   ),
 });
+
+export const stackGroupValidatorSchema = z.object({
+  stackGroups: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      description: z.string(),
+      items: z.array(
+        z.object({
+          id: z.number(),
+          name: z.string(),
+          image_link: z.string(),
+        })
+      ),
+    })
+  ),
+});

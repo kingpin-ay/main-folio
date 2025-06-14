@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { ContactDetails, UserAbout, UserDashboard } from "../types";
+import { ContactDetails, StackGroup, UserAbout, UserDashboard } from "../types";
 import { UserProfile } from "@/components/tabs/profile-tab";
 
 type GetResponseType<T> = {
@@ -218,9 +218,7 @@ class AppClient {
     }
   }
 
-  async updateUserContacts(
-    contacts: ContactDetails[]
-  ): Promise<{
+  async updateUserContacts(contacts: ContactDetails[]): Promise<{
     message: string;
     status: number;
     data: ContactDetails[] | null;
@@ -262,6 +260,27 @@ class AppClient {
         `${this.baseUrl}/users/delete/user/dashboard/contacts/${id}`,
         {
           withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateUserStackGroups(
+    stackGroups: StackGroup[]
+  ): Promise<{ message: string; status: number; data: StackGroup[] | null }> {
+    try {
+      const response = await this.axiosInstance.post(
+        `${this.baseUrl}/users/post/user/dashboard/stack-groups`,
+        { stackGroups: stackGroups },
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
         }
       );
       return this.responseObjectBuilder(response.data);

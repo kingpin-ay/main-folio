@@ -22,6 +22,19 @@ export type UserProfile = z.infer<typeof profileTabValidatorSchema>;
 export type UserAbout = z.infer<typeof aboutTabValidatorSchema>;
 export type ContactDetails = z.infer<typeof contactTabValidatorSchema>;
 
+export interface StackItem {
+  id: number;
+  name: string;
+  image_link: string;
+}
+
+export interface StackGroup {
+  id: number;
+  name: string;
+  description: string;
+  items: StackItem[];
+}
+
 export async function getUserDashboard(userPayload: UserPayload) {
   const user = await db.query.users.findFirst({
     where: eq(users.id, userPayload.id),
@@ -114,12 +127,25 @@ export async function getUserDashboard(userPayload: UserPayload) {
     },
   });
 
+  // Arrange stackGroups with their items (fix description type)
+  const stackGroupsMain: StackGroup[] = stackGroupsData.map((group) => ({
+    id: group.id,
+    name: group.name,
+    description: group.description ?? "",
+    items: stackItemsData
+      .filter((item) => item.stackGroupId === group.id)
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        image_link: item.imageLink,
+      })),
+  }));
+
   return {
     user: user,
     userAbout: userAboutData,
     contactDetails: contactDetailsData,
-    stackItems: stackItemsData,
-    stackGroups: stackGroupsData,
+    stackGroups: stackGroupsMain,
     projects: projectsData,
     projectTags: projectTagsData,
     blogs: blogsData,
@@ -239,5 +265,51 @@ export async function deleteUserContact(id: number) {
     return userContact;
   } catch (error) {
     throw new Error("User not found");
+  }
+}
+
+export async function updateUserStackGroups(
+  userPayload: UserPayload,
+  body: StackGroup[]
+) {
+  try {
+    const stackGroups_main = body.map((group) => ({
+      ...group,
+      userId: userPayload.id,
+    }));
+    const tobeInsertedStackGroups = stackGroups_main
+      .filter(
+        (group): group is typeof group & { id: number } =>
+          typeof group.id === "number" && group.id === 0
+      )
+      .map(({ id, ...rest }) => rest);
+
+    // if (tobeInsertedStackGroups.length > 0) {
+    //   await db.insert(stackGroups).values(tobeInsertedStackGroups);
+    // }
+
+    for (const group of tobeInsertedStackGroups) {
+      const newAddedStackGroup = await db
+        .insert(stackGroups)
+        .values({
+          name: group.name,
+          description: group.description,
+          userId: userPayload.id,
+        })
+        .returning({ id: stackGroups.id });
+
+      for (const item of group.items) {
+        await db.insert(stackItems).values({
+          name: item.name,
+          imageLink: item.image_link,
+          stackGroupId: newAddedStackGroup[0].id,
+        });
+      }
+    }
+
+    return stackGroups_main;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error as string);
   }
 }

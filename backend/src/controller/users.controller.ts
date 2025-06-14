@@ -8,12 +8,14 @@ import {
   updateUserAbout,
   updateUserContacts,
   updateUserProfile,
+  updateUserStackGroups,
 } from "../service/user.service";
 import { validator } from "hono/validator";
 import {
   aboutTabValidator,
   contactTabValidator,
   profileTabValidator,
+  stackGroupValidator,
 } from "../../lib/validator/dashboard.validator";
 
 const app = new Hono<{ Variables: Variables }>();
@@ -97,4 +99,22 @@ app.delete("/delete/user/dashboard/contacts/:id", async (c) => {
     message: "Contact deleted successfully",
   });
 });
+
+app.post(
+  "/post/user/dashboard/stack-groups",
+  validator("json", stackGroupValidator),
+  async (c) => {
+    const body = c.req.valid("json");
+    const userPayload = c.get("user");
+
+    const user = await updateUserStackGroups(userPayload, body.stackGroups);
+
+    return c.json({
+      data: user,
+      status: 200,
+      message: "Stack groups updated successfully",
+    });
+  }
+);
+
 export default app;
