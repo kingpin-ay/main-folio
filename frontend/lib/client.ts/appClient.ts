@@ -6,6 +6,7 @@ import {
   UserAbout,
   UserDashboard,
   Project,
+  Blog,
 } from "../types";
 import { UserProfile } from "@/components/tabs/profile-tab";
 
@@ -379,6 +380,43 @@ class AppClient {
     try {
       const response = await this.axiosInstance.delete(
         `${this.baseUrl}/users/delete/user/dashboard/projects/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateBlog(blogs: Blog[]): Promise<{
+    message: string;
+    status: number;
+    data: Blog | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.post(
+        `${this.baseUrl}/users/post/user/dashboard/blogs`,
+        { blogs: blogs },
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteBlog(id: number): Promise<{
+    message: string;
+    status: number;
+    data: void | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.delete(
+        `${this.baseUrl}/users/delete/user/dashboard/blogs/${id}`,
         {
           withCredentials: true,
         }

@@ -14,6 +14,8 @@ import {
   updateUserProfile,
   updateUserStackGroups,
   deleteProject,
+  updateUserBlogs,
+  deleteBlog,
 } from "../service/user.service";
 import { validator } from "hono/validator";
 import {
@@ -23,6 +25,7 @@ import {
   projectsValidator,
   stackGroupValidator,
   stackItemValidator,
+  blogsValidator,
 } from "../../lib/validator/dashboard.validator";
 
 const app = new Hono<{ Variables: Variables }>();
@@ -183,6 +186,29 @@ app.delete("/delete/user/dashboard/projects/:id", async (c) => {
     data: user,
     status: 200,
     message: "Project deleted successfully",
+  });
+});
+
+app.post(
+  "/post/user/dashboard/blogs",
+  validator("json", blogsValidator),
+  async (c) => {
+    const body = c.req.valid("json");
+    const userPayload = c.get("user");
+    const user = await updateUserBlogs(userPayload, body.blogs);
+    return c.json({
+      data: user,
+      status: 200,
+      message: "Blogs updated successfully",
+    });
+  }
+);
+
+app.delete("/delete/user/dashboard/blogs/:id", async (c) => {
+  const id = c.req.param("id");
+  const user = await deleteBlog(Number(id));
+  return c.json({
+    data: user,
   });
 });
 

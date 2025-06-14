@@ -48,6 +48,9 @@ export interface Blog {
   title: string;
   description: string;
   blogText: string;
+  estimateReadTime: number;
+  tag: string;
+  createdTime: string;
 }
 
 export interface UserAbout {

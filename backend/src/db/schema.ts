@@ -29,7 +29,9 @@ export const blogs = pgTable("blog", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   blogText: text("blog_text").notNull(),
-  createdTime: timestamp("created_time", { withTimezone: true }).notNull(),
+  createdTime: timestamp("created_time", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   estimateReadTime: text("estimate_read_time"),
   tag: text("tag"),
   userId: bigint("user_id", { mode: "number" })

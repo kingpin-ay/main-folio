@@ -1,6 +1,7 @@
 import { Context } from "hono";
 import {
   aboutTabValidatorSchema,
+  blogsValidatorSchema,
   contactTabValidatorSchema,
   profileTabValidatorSchema,
   projectsValidatorSchema,
@@ -59,6 +60,14 @@ export const stackItemValidator = (value: any, c: Context<any, string, {}>) => {
 
 export const projectsValidator = (value: any, c: Context<any, string, {}>) => {
   const parsed = projectsValidatorSchema.safeParse(value);
+  if (!parsed.success) {
+    return c.text("Invalid!", 401);
+  }
+  return parsed.data;
+};
+
+export const blogsValidator = (value: any, c: Context<any, string, {}>) => {
+  const parsed = blogsValidatorSchema.safeParse(value);
   if (!parsed.success) {
     return c.text("Invalid!", 401);
   }

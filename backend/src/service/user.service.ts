@@ -14,15 +14,22 @@ import {
   profileTabValidatorSchema,
   aboutTabValidatorSchema,
   contactTabValidatorSchema,
-  stackItemValidatorSchema,
-  stackGroupValidatorSchema,
-  projectsValidatorSchema,
 } from "../../lib/validation-schema/user.schema";
 import { z } from "zod";
 
 export type UserProfile = z.infer<typeof profileTabValidatorSchema>;
 export type UserAbout = z.infer<typeof aboutTabValidatorSchema>;
 export type ContactDetails = z.infer<typeof contactTabValidatorSchema>;
+export type Blogs = {
+  id: number;
+  title: string;
+  description: string;
+  blogText: string;
+  estimateReadTime: number;
+  tag: string;
+  createdTime: string;
+};
+
 export type Projects = {
   id: number;
   title: string;
@@ -123,6 +130,9 @@ export async function getUserDashboard(userPayload: UserPayload) {
       title: true,
       description: true,
       blogText: true,
+      estimateReadTime: true,
+      tag: true,
+      createdTime: true,
     },
   });
 
@@ -400,6 +410,38 @@ export async function deleteProject(id: number) {
   try {
     const project = await db.delete(projects).where(eq(projects.id, id));
     return project;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}
+
+export async function updateUserBlogs(userPayload: UserPayload, body: Blogs[]) {
+  try {
+    const blogs_main = body.map((blog) => ({
+      ...blog,
+      userId: userPayload.id,
+      estimateReadTime: blog.estimateReadTime.toString(),
+    }));
+
+    const tobeInsertedBlogs = blogs_main
+      .filter(
+        (blog): blog is typeof blog & { id: number } =>
+          typeof blog.id === "number" && blog.id === 0
+      )
+      .map(({ id, createdTime, ...rest }) => rest);
+
+    const added_blogs = await db.insert(blogs).values(tobeInsertedBlogs);
+    return added_blogs;
+  } catch (error) {
+    console.log(error);
+    throw new Error("User not found");
+  }
+}
+
+export async function deleteBlog(id: number) {
+  try {
+    const blog = await db.delete(blogs).where(eq(blogs.id, id));
+    return blog;
   } catch (error) {
     throw new Error("User not found");
   }

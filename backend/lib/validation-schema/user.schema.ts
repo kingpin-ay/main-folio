@@ -82,3 +82,17 @@ export const projectsValidatorSchema = z.object({
     })
   ),
 });
+
+export const blogsValidatorSchema = z.object({
+  blogs: z.array(
+    z.object({
+      id: z.number(),
+      title: z.string(),
+      description: z.string(),
+      blogText: z.string(),
+      estimateReadTime: z.number(),
+      tag: z.string(),
+      createdTime: z.string(),
+    })
+  ),
+});
