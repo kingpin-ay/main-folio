@@ -15,88 +15,33 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import { StackGroup, StackItem } from "@/lib/types";
+import { appClient } from "@/lib/client.ts/appClient";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
 
-interface StackItem {
-  id: string;
-  name: string;
-  image_link: string;
-}
+const handleSaveAll = async (stackGroups: StackGroup[]) => {
+  console.log("Saving all preferences:", stackGroups);
+  const response = appClient.updateUserStackGroups(stackGroups);
+  return response;
+};
 
-interface StackGroup {
-  id: string;
-  name: string;
-  description: string;
-  items: StackItem[];
-}
-
-export default function PreferencesTab() {
-  const [stackGroups, setStackGroups] = useState<StackGroup[]>([
-    {
-      id: "1",
-      name: "Frontend",
-      description: "Frontend technologies I use",
-      items: [
-        {
-          id: "101",
-          name: "Next.js",
-          image_link: "https://example.com/nextjs.png",
-        },
-        {
-          id: "102",
-          name: "React",
-          image_link: "https://example.com/react.png",
-        },
-        {
-          id: "103",
-          name: "Tailwind CSS",
-          image_link: "https://example.com/tailwind.png",
-        },
-      ],
-    },
-    {
-      id: "2",
-      name: "Backend",
-      description: "Backend technologies I use",
-      items: [
-        {
-          id: "201",
-          name: "Node.js",
-          image_link: "https://example.com/nodejs.png",
-        },
-        {
-          id: "202",
-          name: "Express",
-          image_link: "https://example.com/express.png",
-        },
-        {
-          id: "203",
-          name: "NestJS",
-          image_link: "https://example.com/nestjs.png",
-        },
-      ],
-    },
-    {
-      id: "3",
-      name: "DevOps",
-      description: "DevOps tools I use",
-      items: [
-        {
-          id: "301",
-          name: "Docker",
-          image_link: "https://example.com/docker.png",
-        },
-        { id: "302", name: "Git", image_link: "https://example.com/git.png" },
-      ],
-    },
-  ]);
+export default function PreferencesTab({
+  stackGroupsMain,
+}: {
+  stackGroupsMain: StackGroup[];
+}) {
+  const queryClient = useQueryClient();
+  const [stackGroups, setStackGroups] = useState<StackGroup[]>(stackGroupsMain);
 
   const [newGroup, setNewGroup] = useState({
+    id: 0,
     name: "",
     description: "",
   });
 
-  const [newItem, setNewItem] = useState({
-    groupId: "",
+  const [newItem, setNewItem] = useState<StackItem>({
+    id: 0,
     name: "",
     image_link: "",
   });
@@ -104,53 +49,116 @@ export default function PreferencesTab() {
   const handleAddGroup = () => {
     if (!newGroup.name) return;
 
-    const id = Math.random().toString(36).substring(2, 9);
+    const id = 0;
     setStackGroups([...stackGroups, { ...newGroup, id, items: [] }]);
-    setNewGroup({ name: "", description: "" });
+    setNewGroup({ id: 0, name: "", description: "" });
   };
 
-  const handleDeleteGroup = (id: string) => {
-    setStackGroups(stackGroups.filter((group) => group.id !== id));
+  const handleDeleteGroup = (id: number) => {
+    if (id === 0) {
+      setStackGroups(stackGroups.filter((group) => group.id !== id));
+    } else {
+      appClient.deleteStackGroup(id);
+      setStackGroups(stackGroups.filter((group) => group.id !== id));
+      revalidateData.mutate();
+    }
   };
 
-  const handleAddItem = () => {
-    if (!newItem.name || !newItem.groupId) return;
+  const handleAddItem = (index: number) => {
+    if (!newItem.name) return;
 
-    const id = Math.random().toString(36).substring(2, 9);
-    const updatedGroups = stackGroups.map((group) => {
-      if (group.id === newItem.groupId) {
-        return {
-          ...group,
-          items: [
-            ...group.items,
-            { id, name: newItem.name, image_link: newItem.image_link },
-          ],
-        };
+    const id = 0;
+    const updatedGroups = stackGroups.map((group, inx) => {
+      if (inx === index) {
+        if (group.id === 0) {
+          return {
+            ...group,
+            items: [
+              ...group.items,
+              { id, name: newItem.name, image_link: newItem.image_link },
+            ],
+          };
+        } else {
+          appClient
+            .addStackGroupItem(group.id, newItem)
+            .then(() => {
+              revalidateData.mutate();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          return {
+            ...group,
+            items: [
+              ...group.items,
+              { id, name: newItem.name, image_link: newItem.image_link },
+            ],
+          };
+        }
       }
       return group;
     });
 
     setStackGroups(updatedGroups);
-    setNewItem({ groupId: "", name: "", image_link: "" });
+    setNewItem({ id: 0, name: "", image_link: "" });
   };
 
-  const handleDeleteItem = (groupId: string, itemId: string) => {
-    const updatedGroups = stackGroups.map((group) => {
-      if (group.id === groupId) {
-        return {
-          ...group,
-          items: group.items.filter((item) => item.id !== itemId),
-        };
-      }
-      return group;
-    });
+  const handleDeleteItem = async (groupId: number, itemId: number) => {
+    if (groupId === 0) {
+      const updatedGroups = stackGroups.map((group) => {
+        if (group.id === groupId) {
+          return {
+            ...group,
+            items: group.items.filter((item) => item.id !== itemId),
+          };
+        }
+        return group;
+      });
 
-    setStackGroups(updatedGroups);
+      setStackGroups(updatedGroups);
+    } else {
+      await appClient.deleteSingleStackGroupItem(groupId, itemId);
+      const updatedGroups = stackGroups.map((group) => {
+        if (group.id === groupId) {
+          return {
+            ...group,
+            items: group.items.filter((item) => item.id !== itemId),
+          };
+        }
+        return group;
+      });
+      setStackGroups(updatedGroups);
+      revalidateData.mutate();
+    }
   };
 
-  const handleSaveAll = () => {
-    console.log("Saving all preferences:", stackGroups);
-    // Implement API call to save all preferences
+  const mutation = useMutation({
+    mutationFn: async (stackGroups: StackGroup[]) => {
+      await handleSaveAll(stackGroups);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/get/user/dashboard"] });
+      toast({
+        title: "Update: successful",
+        description: new Date().toLocaleString(),
+      });
+    },
+  });
+
+  const revalidateData = useMutation({
+    mutationFn: async () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/get/user/dashboard"] });
+      toast({
+        title: "Update: successful",
+        description: new Date().toLocaleString(),
+      });
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate(stackGroups);
   };
 
   return (
@@ -163,7 +171,7 @@ export default function PreferencesTab() {
       </div>
 
       <div className="space-y-6">
-        {stackGroups.map((group) => (
+        {stackGroups.map((group, index) => (
           <div
             key={group.id}
             className="space-y-4 border border-gray-800 rounded-lg p-4"
@@ -186,9 +194,9 @@ export default function PreferencesTab() {
             <Separator className="my-2" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {group.items.map((item) => (
+              {group.items.map((item, index) => (
                 <div
-                  key={item.id}
+                  key={index}
                   className="flex items-center gap-2 border border-gray-700 rounded-md p-2"
                 >
                   <div className="flex-1">
@@ -220,23 +228,14 @@ export default function PreferencesTab() {
                     <DialogTitle>Add New Item</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4 py-4">
-                    <input
-                      type="hidden"
-                      value={group.id}
-                      onChange={() => {}}
-                      onFocus={() =>
-                        setNewItem((prev) => ({ ...prev, groupId: group.id }))
-                      }
-                    />
                     <div className="space-y-2">
                       <Label htmlFor={`item-name-${group.id}`}>Name</Label>
                       <Input
                         id={`item-name-${group.id}`}
-                        value={newItem.groupId === group.id ? newItem.name : ""}
+                        value={newItem.name}
                         onChange={(e) =>
                           setNewItem({
                             ...newItem,
-                            groupId: group.id,
                             name: e.target.value,
                           })
                         }
@@ -249,13 +248,10 @@ export default function PreferencesTab() {
                       </Label>
                       <Input
                         id={`item-image-${group.id}`}
-                        value={
-                          newItem.groupId === group.id ? newItem.image_link : ""
-                        }
+                        value={newItem.image_link}
                         onChange={(e) =>
                           setNewItem({
                             ...newItem,
-                            groupId: group.id,
                             image_link: e.target.value,
                           })
                         }
@@ -270,7 +266,9 @@ export default function PreferencesTab() {
                       </Button>
                     </DialogClose>
                     <DialogClose asChild>
-                      <Button onClick={handleAddItem}>Add Item</Button>
+                      <Button onClick={() => handleAddItem(index)}>
+                        Add Item
+                      </Button>
                     </DialogClose>
                   </DialogFooter>
                 </DialogContent>
@@ -331,7 +329,7 @@ export default function PreferencesTab() {
         </Dialog>
       </div>
 
-      <Button onClick={handleSaveAll} className="ml-auto">
+      <Button onClick={handleSubmit} className="ml-auto">
         Save all preferences
       </Button>
     </div>

@@ -3,17 +3,23 @@ import { Hono } from "hono";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { Variables } from "../../lib/types/user.type.controller";
 import {
+  addStackGroupItem,
+  deleteSingleStackGroupItem,
+  deleteStackGroup,
   deleteUserContact,
   getUserDashboard,
   updateUserAbout,
   updateUserContacts,
   updateUserProfile,
+  updateUserStackGroups,
 } from "../service/user.service";
 import { validator } from "hono/validator";
 import {
   aboutTabValidator,
   contactTabValidator,
   profileTabValidator,
+  stackGroupValidator,
+  stackItemValidator,
 } from "../../lib/validator/dashboard.validator";
 
 const app = new Hono<{ Variables: Variables }>();
@@ -97,4 +103,59 @@ app.delete("/delete/user/dashboard/contacts/:id", async (c) => {
     message: "Contact deleted successfully",
   });
 });
+
+app.post(
+  "/post/user/dashboard/stack-groups",
+  validator("json", stackGroupValidator),
+  async (c) => {
+    const body = c.req.valid("json");
+    const userPayload = c.get("user");
+
+    const user = await updateUserStackGroups(userPayload, body.stackGroups);
+
+    return c.json({
+      data: user,
+      status: 200,
+      message: "Stack groups updated successfully",
+    });
+  }
+);
+
+app.delete(
+  "/delete/user/dashboard/stack-groups/:stackGroupId/items/:stackItemId",
+  async (c) => {
+    const stackGroupId = c.req.param("stackGroupId");
+    const stackItemId = c.req.param("stackItemId");
+    const user = await deleteSingleStackGroupItem(
+      Number(stackGroupId),
+      Number(stackItemId)
+    );
+    return c.json({
+      data: user,
+    });
+  }
+);
+
+app.post(
+  "/post/user/dashboard/stack-groups/:stackGroupId/items",
+  validator("json", stackItemValidator),
+  async (c) => {
+    const stackGroupId = c.req.param("stackGroupId");
+    const body = c.req.valid("json");
+
+    const user = await addStackGroupItem(Number(stackGroupId), body.stackItem);
+    return c.json({
+      data: user,
+    });
+  }
+);
+
+app.delete("/delete/user/dashboard/stack-groups/:stackGroupId", async (c) => {
+  const stackGroupId = c.req.param("stackGroupId");
+  const user = await deleteStackGroup(Number(stackGroupId));
+  return c.json({
+    data: user,
+  });
+});
+
 export default app;

@@ -17,15 +17,15 @@ export interface ContactDetails {
 
 export interface StackItem {
   id: number;
-  stackGroupId: number;
   name: string;
-  imageLink: string;
+  image_link: string;
 }
 
 export interface StackGroup {
   id: number;
   name: string;
   description: string;
+  items: StackItem[];
 }
 
 export interface Project {
