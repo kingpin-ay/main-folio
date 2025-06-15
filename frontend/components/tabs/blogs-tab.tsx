@@ -21,67 +21,47 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Blog } from "@/lib/types";
+import { appClient } from "@/lib/client.ts/appClient";
+import { toast } from "@/hooks/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface Blog {
-  id: string;
-  title: string;
-  description: string;
-  blog_text: string;
-  created_time: string;
-  estimate_read_time: string;
-  tag: string;
-}
+const handleSaveAll = async (blogs: Blog[]) => {
+  console.log("Saving all blogs:", blogs);
+  await appClient.updateBlog(blogs);
+};
 
-export default function BlogsTab() {
-  const [blogs, setBlogs] = useState<Blog[]>([
-    {
-      id: "1",
-      title: "Getting Started with Next.js",
-      description: "A beginner's guide to Next.js framework",
-      blog_text:
-        "Next.js is a React framework that enables server-side rendering and static site generation...",
-      created_time: "2023-05-15T10:30:00Z",
-      estimate_read_time: "5 min",
-      tag: "Next.js",
-    },
-    {
-      id: "2",
-      title: "Understanding React Hooks",
-      description: "Deep dive into React Hooks and their use cases",
-      blog_text:
-        "React Hooks were introduced in React 16.8 and have changed how we write React components...",
-      created_time: "2023-06-20T14:45:00Z",
-      estimate_read_time: "8 min",
-      tag: "React",
-    },
-  ]);
+export default function BlogsTab({ blogs_main }: { blogs_main: Blog[] }) {
+  const [blogs, setBlogs] = useState<Blog[]>(blogs_main);
+  const queryClient = useQueryClient();
 
   const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
   const [newBlog, setNewBlog] = useState<Omit<Blog, "id" | "created_time">>({
     title: "",
     description: "",
-    blog_text: "",
-    estimate_read_time: "",
+    blogText: "",
+    estimateReadTime: 0,
     tag: "",
+    createdTime: "",
   });
 
   const handleAddBlog = () => {
     if (!newBlog.title) return;
 
-    const id = Math.random().toString(36).substring(2, 9);
-    const created_time = new Date().toISOString();
+    const id = 0;
 
-    setBlogs([...blogs, { ...newBlog, id, created_time }]);
+    setBlogs([...blogs, { ...newBlog, id }]);
     setNewBlog({
       title: "",
       description: "",
-      blog_text: "",
-      estimate_read_time: "",
+      blogText: "",
+      estimateReadTime: 0,
       tag: "",
+      createdTime: "",
     });
   };
 
-  const handleDeleteBlog = (id: string) => {
+  const handleDeleteBlog = (id: number) => {
     setBlogs(blogs.filter((blog) => blog.id !== id));
   };
 
@@ -109,9 +89,22 @@ export default function BlogsTab() {
     });
   };
 
-  const handleSaveAll = () => {
-    console.log("Saving all blogs:", blogs);
-    // Implement API call to save all blogs
+  const mutation = useMutation({
+    mutationFn: async (blogs: Blog[]) => {
+      await handleSaveAll(blogs);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/get/user/dashboard"] });
+      toast({
+        title: "Update: successful",
+        description: new Date().toLocaleString(),
+      });
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate(blogs);
   };
 
   return (
@@ -152,7 +145,7 @@ export default function BlogsTab() {
             </CardHeader>
             <CardContent className="pb-2">
               <p className="text-sm text-gray-400 line-clamp-2">
-                {blog.blog_text}
+                {blog.blogText}
               </p>
               <div className="flex flex-wrap gap-2 mt-2">
                 <span className="text-xs bg-gray-800 px-2 py-1 rounded-full">
@@ -164,11 +157,11 @@ export default function BlogsTab() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
-                  <span>{formatDate(blog.created_time)}</span>
+                  <span>{formatDate(blog.createdTime)}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  <span>{blog.estimate_read_time} read</span>
+                  <span>{blog.estimateReadTime} read</span>
                 </div>
               </div>
             </CardFooter>
@@ -215,9 +208,9 @@ export default function BlogsTab() {
                 <Label htmlFor="blog-text">Content</Label>
                 <Textarea
                   id="blog-text"
-                  value={newBlog.blog_text}
+                  value={newBlog.blogText}
                   onChange={(e) =>
-                    setNewBlog({ ...newBlog, blog_text: e.target.value })
+                    setNewBlog({ ...newBlog, blogText: e.target.value })
                   }
                   className="bg-gray-800 border-gray-700 min-h-[200px]"
                 />
@@ -227,11 +220,11 @@ export default function BlogsTab() {
                   <Label htmlFor="blog-read-time">Read Time</Label>
                   <Input
                     id="blog-read-time"
-                    value={newBlog.estimate_read_time}
+                    value={newBlog.estimateReadTime}
                     onChange={(e) =>
                       setNewBlog({
                         ...newBlog,
-                        estimate_read_time: e.target.value,
+                        estimateReadTime: Number(e.target.value),
                       })
                     }
                     placeholder="e.g. 5 min"
@@ -305,11 +298,11 @@ export default function BlogsTab() {
                 <Label htmlFor="edit-blog-text">Content</Label>
                 <Textarea
                   id="edit-blog-text"
-                  value={editingBlog.blog_text}
+                  value={editingBlog.blogText}
                   onChange={(e) =>
                     setEditingBlog({
                       ...editingBlog,
-                      blog_text: e.target.value,
+                      blogText: e.target.value,
                     })
                   }
                   className="bg-gray-800 border-gray-700 min-h-[200px]"
@@ -320,11 +313,11 @@ export default function BlogsTab() {
                   <Label htmlFor="edit-blog-read-time">Read Time</Label>
                   <Input
                     id="edit-blog-read-time"
-                    value={editingBlog.estimate_read_time}
+                    value={editingBlog.estimateReadTime}
                     onChange={(e) =>
                       setEditingBlog({
                         ...editingBlog,
-                        estimate_read_time: e.target.value,
+                        estimateReadTime: Number(e.target.value),
                       })
                     }
                     className="bg-gray-800 border-gray-700"
@@ -336,7 +329,10 @@ export default function BlogsTab() {
                     id="edit-blog-tag"
                     value={editingBlog.tag}
                     onChange={(e) =>
-                      setEditingBlog({ ...editingBlog, tag: e.target.value })
+                      setEditingBlog({
+                        ...editingBlog,
+                        tag: e.target.value,
+                      })
                     }
                     className="bg-gray-800 border-gray-700"
                   />
@@ -357,7 +353,7 @@ export default function BlogsTab() {
         </DialogContent>
       </Dialog>
 
-      <Button onClick={handleSaveAll} className="ml-auto">
+      <Button onClick={handleSubmit} className="ml-auto">
         Save all blogs
       </Button>
     </div>

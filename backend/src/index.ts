@@ -4,6 +4,7 @@ import { cors } from "hono/cors";
 // import { serve } from "@hono/node-server";
 import users from "./controller/users.controller";
 import auth from "./controller/auth.controller";
+import profile from "./controller/profile.controller";
 import { logger } from "hono/logger";
 import { env } from "../lib/helper/env";
 
@@ -34,6 +35,10 @@ app.get("/health-check", (c) => {
 app.route("/auth", auth);
 app.route("/users", users);
 
-// serve({ port: 3001, fetch: app.fetch });
+app.route("/profile", profile);
+
+
+
+serve({ port: 3001, fetch: app.fetch });
 
 export const handler = handle(app);

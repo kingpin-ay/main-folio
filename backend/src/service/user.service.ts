@@ -2,7 +2,6 @@ import { db } from "../db";
 import {
   contactDetails,
   projects,
-  projectTags,
   stackGroups,
   stackItems,
   userAbout,
@@ -15,14 +14,31 @@ import {
   profileTabValidatorSchema,
   aboutTabValidatorSchema,
   contactTabValidatorSchema,
-  stackItemValidatorSchema,
-  stackGroupValidatorSchema,
 } from "../../lib/validation-schema/user.schema";
 import { z } from "zod";
 
 export type UserProfile = z.infer<typeof profileTabValidatorSchema>;
 export type UserAbout = z.infer<typeof aboutTabValidatorSchema>;
 export type ContactDetails = z.infer<typeof contactTabValidatorSchema>;
+export type Blogs = {
+  id: number;
+  title: string;
+  description: string;
+  blogText: string;
+  estimateReadTime: number;
+  tag: string;
+  createdTime: string;
+};
+
+export type Projects = {
+  id: number;
+  title: string;
+  description: string;
+  imageLink: string;
+  demoLink: string;
+  codeLink: string;
+  tags: string[];
+};
 
 export interface StackItem {
   name: string;
@@ -103,18 +119,7 @@ export async function getUserDashboard(userPayload: UserPayload) {
       imageLink: true,
       demoLink: true,
       codeLink: true,
-    },
-  });
-
-  const projectTagsData = await db.query.projectTags.findMany({
-    where: inArray(
-      projectTags.projectId,
-      projectsData.map((project) => project.id)
-    ),
-    columns: {
-      id: true,
-      projectId: true,
-      title: true,
+      tags: true,
     },
   });
 
@@ -125,6 +130,9 @@ export async function getUserDashboard(userPayload: UserPayload) {
       title: true,
       description: true,
       blogText: true,
+      estimateReadTime: true,
+      tag: true,
+      createdTime: true,
     },
   });
 
@@ -148,7 +156,6 @@ export async function getUserDashboard(userPayload: UserPayload) {
     contactDetails: contactDetailsData,
     stackGroups: stackGroupsMain,
     projects: projectsData,
-    projectTags: projectTagsData,
     blogs: blogsData,
   };
 }
@@ -361,6 +368,192 @@ export async function deleteStackGroup(stackGroupId: number) {
     return stackGroup;
   } catch (error) {
     console.log(error);
+    throw new Error("User not found");
+  }
+}
+
+export async function updateUserProjects(
+  userPayload: UserPayload,
+  body: Projects[]
+) {
+  try {
+    const projects_main = body.map((project) => ({
+      ...project,
+      userId: userPayload.id,
+    }));
+    const tobeInsertedProjects = projects_main.filter(
+      (project): project is typeof project & { id: number } =>
+        typeof project.id === "number" && project.id === 0
+    );
+
+    const project_data = tobeInsertedProjects.map((project) => ({
+      title: project.title,
+      description: project.description,
+      imageLink: project.imageLink,
+      demoLink: project.demoLink,
+      codeLink: project.codeLink,
+      tags: project.tags,
+      userId: userPayload.id,
+    }));
+
+    if (project_data.length > 0) {
+      await db.insert(projects).values(project_data);
+    }
+
+    return projects;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}
+
+export async function deleteProject(id: number) {
+  try {
+    const project = await db.delete(projects).where(eq(projects.id, id));
+    return project;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}
+
+export async function updateUserBlogs(userPayload: UserPayload, body: Blogs[]) {
+  try {
+    const blogs_main = body.map((blog) => ({
+      ...blog,
+      userId: userPayload.id,
+      estimateReadTime: blog.estimateReadTime.toString(),
+    }));
+
+    const tobeInsertedBlogs = blogs_main
+      .filter(
+        (blog): blog is typeof blog & { id: number } =>
+          typeof blog.id === "number" && blog.id === 0
+      )
+      .map(({ id, createdTime, ...rest }) => rest);
+
+    const added_blogs = await db.insert(blogs).values(tobeInsertedBlogs);
+    return added_blogs;
+  } catch (error) {
+    console.log(error);
+    throw new Error("User not found");
+  }
+}
+
+export async function deleteBlog(id: number) {
+  try {
+    const blog = await db.delete(blogs).where(eq(blogs.id, id));
+    return blog;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}
+
+export async function getUserProfileData(username: string) {
+  try {
+    const user = await db.query.users.findFirst({
+      where: eq(users.userName, username),
+      columns: {
+        firstName: true,
+        lastName: true,
+        bio: true,
+        designation: true,
+        email: true,
+        id: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const contactDetailsData = await db.query.contactDetails.findMany({
+      where: eq(contactDetails.userId, user?.id),
+      columns: {
+        link: true,
+        linkType: true,
+      },
+    });
+
+    const projectsData = await db.query.projects.findMany({
+      where: eq(projects.userId, user?.id),
+      columns: {
+        title: true,
+        description: true,
+        imageLink: true,
+        demoLink: true,
+        codeLink: true,
+        tags: true,
+      },
+    });
+
+    const userAboutData = await db.query.userAbout.findFirst({
+      where: eq(userAbout.userId, user?.id),
+      columns: {
+        shortDescription: true,
+        description: true,
+        imageLink: true,
+        email: true,
+        phoneNumber: true,
+        location: true,
+      },
+    });
+
+    const blogsData = await db.query.blogs.findMany({
+      where: eq(blogs.userId, user?.id),
+      columns: {
+        title: true,
+        description: true,
+        blogText: true,
+        estimateReadTime: true,
+        tag: true,
+        createdTime: true,
+      },
+    });
+
+    const result = await db
+      .select({
+        stackGroupName: stackGroups.name,
+        stackItemName: stackItems.name,
+        stackItemIcon: stackItems.imageLink,
+        stackGroupId: stackGroups.id,
+      })
+      .from(stackGroups)
+      .leftJoin(stackItems, eq(stackGroups.id, stackItems.stackGroupId));
+
+    const grouped = result.reduce((acc, row) => {
+      const existing = acc.find((g) => g.stackGroupName === row.stackGroupName);
+      const item = {
+        name: row.stackItemName ?? "",
+        icon: row.stackItemIcon ?? "",
+      };
+
+      if (existing) {
+        existing.stackItems.push(item);
+      } else {
+        acc.push({
+          stackGroupName: row.stackGroupName,
+          stackItems: [item],
+        });
+      }
+
+      return acc;
+    }, [] as { stackGroupName: string; stackItems: { name: string; icon: string }[] }[]);
+
+    const mainUser: Omit<typeof user, "id"> = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      bio: user.bio,
+      designation: user.designation,
+      email: user.email,
+    };
+    return {
+      user: mainUser,
+      contactDetails: contactDetailsData,
+      projects: projectsData,
+      userAbout: userAboutData,
+      blogs: blogsData,
+      stackGroups: grouped,
+    };
+  } catch (error) {
     throw new Error("User not found");
   }
 }

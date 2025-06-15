@@ -21,14 +21,7 @@ export const projects = pgTable("project", {
   userId: bigint("user_id", { mode: "number" })
     .notNull()
     .references(() => users.id),
-});
-
-export const projectTags = pgTable("project_tags", {
-  id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
-  projectId: bigint("project_id", { mode: "number" })
-    .notNull()
-    .references(() => projects.id),
-  title: text("title").notNull(),
+  tags: text("tags").array(),
 });
 
 export const blogs = pgTable("blog", {
@@ -36,7 +29,9 @@ export const blogs = pgTable("blog", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   blogText: text("blog_text").notNull(),
-  createdTime: timestamp("created_time", { withTimezone: true }).notNull(),
+  createdTime: timestamp("created_time", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   estimateReadTime: text("estimate_read_time"),
   tag: text("tag"),
   userId: bigint("user_id", { mode: "number" })

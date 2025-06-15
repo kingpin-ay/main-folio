@@ -5,6 +5,9 @@ import {
   StackItem,
   UserAbout,
   UserDashboard,
+  Project,
+  Blog,
+  UserProfileData,
 } from "../types";
 import { UserProfile } from "@/components/tabs/profile-tab";
 
@@ -340,6 +343,97 @@ class AppClient {
         {
           withCredentials: true,
         }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateUserProjects(projects: Project[]): Promise<{
+    message: string;
+    status: number;
+    data: Project[] | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.post(
+        `${this.baseUrl}/users/post/user/dashboard/projects`,
+        { projects: projects },
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteProject(id: number): Promise<{
+    message: string;
+    status: number;
+    data: void | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.delete(
+        `${this.baseUrl}/users/delete/user/dashboard/projects/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateBlog(blogs: Blog[]): Promise<{
+    message: string;
+    status: number;
+    data: Blog | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.post(
+        `${this.baseUrl}/users/post/user/dashboard/blogs`,
+        { blogs: blogs },
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteBlog(id: number): Promise<{
+    message: string;
+    status: number;
+    data: void | null;
+  }> {
+    try {
+      const response = await this.axiosInstance.delete(
+        `${this.baseUrl}/users/delete/user/dashboard/blogs/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getUserData(
+    username: string
+  ): Promise<GetResponseType<UserProfileData>> {
+    try {
+      const response = await this.axiosInstance.get(
+        `${this.baseUrl}/profile/get/user/data/${username}`
       );
       return this.responseObjectBuilder(response.data);
     } catch (error) {

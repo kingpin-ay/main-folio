@@ -4,35 +4,27 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { splitTextBySentenceAndWordCount } from "@/lib/utils";
 
-const techStack = {
-  frontend: [
-    { name: "React", icon: "/icon-svg/react.svg?height=60&width=60" },
-    { name: "Next.js", icon: "/icon-svg/next-js.svg?height=60&width=60" },
-    { name: "TypeScript", icon: "/icon-svg/typescript.svg?height=60&width=60" },
-    { name: "Tailwind CSS", icon: "/icon-svg/tailwind.svg?height=60&width=60" },
-    // {
-    //   name: "Motion",
-    //   icon: "https://framerusercontent.com/images/3aQX5dnH5Yqgsn98QXKF2ZXxIE.png",
-    // },
-  ],
-  backend: [
-    { name: "Node.js", icon: "/icon-svg/nodejs.svg?height=60&width=60" },
-    { name: "Express", icon: "/icon-svg/express.svg?height=60&width=60" },
-    { name: "MongoDB", icon: "/icon-svg/mongodb.svg?height=60&width=60" },
-    { name: "PostgreSQL", icon: "/icon-svg/postgresql.svg?height=60&width=60" },
-    { name: "GraphQL", icon: "/icon-svg/graphql.svg?height=60&width=60" },
-  ],
-  tools: [
-    { name: "Git", icon: "/icon-svg/git.svg?height=60&width=60" },
-    { name: "Docker", icon: "/icon-svg/docker.svg?height=60&width=60" },
-    { name: "VS Code", icon: "/icon-svg/vs-code.svg?height=60&width=60" },
-    { name: "AWS", icon: "/icon-svg/aws.svg?height=60&width=60" },
-    { name: "Github", icon: "/icon-svg/github.svg?height=60&width=60" },
-  ],
-};
-
-export default function About() {
+export default function About({
+  shortDescription,
+  description,
+  imageLink,
+  fullName,
+  stackGroups,
+}: {
+  shortDescription: string;
+  description: string;
+  imageLink: string;
+  fullName: string;
+  stackGroups: {
+    stackGroupName: string;
+    stackItems: {
+      name: string;
+      icon: string;
+    }[];
+  }[];
+}) {
   return (
     <div className="py-20 bg-muted/50">
       <div className="container px-4 sm:px-6">
@@ -47,7 +39,7 @@ export default function About() {
             About Me
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Get to know me and the technologies I work with.
+            {shortDescription}
           </p>
         </motion.div>
 
@@ -61,7 +53,7 @@ export default function About() {
             <div className="relative mx-auto lg:mx-0 max-w-md">
               <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-primary/20 to-primary/40 blur-md" />
               <Image
-                src="/my-picture/me.jpg"
+                src={imageLink}
                 alt="Profile"
                 width={500}
                 height={500}
@@ -77,22 +69,14 @@ export default function About() {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold">{`Hi there! I'm Ayush Mondal`}</h3>
-            <p className="text-muted-foreground">
-              {`I'm a passionate full-stack developer with over 5 years of
-              experience building web applications. I specialize in creating
-              responsive, accessible, and performant web experiences using
-              modern technologies.`}
-            </p>
-            <p className="text-muted-foreground">
-              {`My journey in web development started when I built my first
-              website at the age of 18. Since then, I've worked with various
-              startups and established companies to bring their ideas to life.`}
-            </p>
-            <p className="text-muted-foreground">
-              {`When I'm not coding, you can find me hiking, reading sci-fi
-              novels, or experimenting with new recipes in the kitchen.`}
-            </p>
+            <h3 className="text-2xl font-bold">{`Hi there! I'm ${fullName}`}</h3>
+            {splitTextBySentenceAndWordCount(description, 35).map(
+              (sentence) => (
+                <p className="text-muted-foreground" key={sentence}>
+                  {sentence}
+                </p>
+              )
+            )}
           </motion.div>
         </div>
 
@@ -105,17 +89,26 @@ export default function About() {
         >
           <h3 className="text-2xl font-bold text-center mb-8">Tech Stack</h3>
 
-          <Tabs defaultValue="frontend" className="w-full">
+          <Tabs defaultValue={stackGroups[0].stackGroupName} className="w-full">
             <TabsList className="grid w-full grid-cols-3 mb-8">
-              <TabsTrigger value="frontend">Frontend</TabsTrigger>
-              <TabsTrigger value="backend">Backend</TabsTrigger>
-              <TabsTrigger value="tools">Tools</TabsTrigger>
+              {stackGroups.map((stackGroup) => (
+                <TabsTrigger
+                  key={stackGroup.stackGroupName}
+                  value={stackGroup.stackGroupName}
+                >
+                  {stackGroup.stackGroupName}
+                </TabsTrigger>
+              ))}
             </TabsList>
 
-            {Object.entries(techStack).map(([category, technologies]) => (
-              <TabsContent key={category} value={category} className="mt-0">
+            {stackGroups.map((stackGroup) => (
+              <TabsContent
+                key={stackGroup.stackGroupName}
+                value={stackGroup.stackGroupName}
+                className="mt-0"
+              >
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                  {technologies.map((tech, index) => (
+                  {stackGroup.stackItems.map((tech, index) => (
                     <motion.div
                       key={tech.name}
                       initial={{ opacity: 0, y: 10 }}

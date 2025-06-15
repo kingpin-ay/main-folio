@@ -5,7 +5,6 @@ export interface UserDashboard {
   stackItems: StackItem[];
   stackGroups: StackGroup[];
   projects: Project[];
-  projectTags: ProjectTag[];
   blogs: Blog[];
 }
 
@@ -35,6 +34,7 @@ export interface Project {
   imageLink: string;
   demoLink: string;
   codeLink: string;
+  tags: string[];
 }
 
 export interface ProjectTag {
@@ -48,6 +48,9 @@ export interface Blog {
   title: string;
   description: string;
   blogText: string;
+  estimateReadTime: number;
+  tag: string;
+  createdTime: string;
 }
 
 export interface UserAbout {
@@ -66,4 +69,52 @@ export interface User {
   designation: string | null;
   userName: string;
   email: string;
+}
+
+export interface UserProfileData {
+  user: {
+    firstName: string;
+    lastName: string;
+    bio: string;
+    designation: string | null;
+    userName: string;
+    email: string;
+  };
+  contactDetails: {
+    link: string;
+    linkType: "GITHUB" | "YOUTUBE" | "X" | "MAIL" | "LINKEDLN";
+  }[];
+  projects: {
+    title: string;
+    description: string;
+    imageLink: string | null;
+    demoLink: string | null;
+    codeLink: string | null;
+    tags: string[] | null;
+  }[];
+  userAbout:
+    | {
+        email: string | null;
+        description: string;
+        imageLink: string;
+        shortDescription: string | null;
+        phoneNumber: string | null;
+        location: string | null;
+      }
+    | undefined;
+  blogs: {
+    title: string;
+    description: string;
+    blogText: string;
+    createdTime: Date;
+    estimateReadTime: string | null;
+    tag: string | null;
+  }[];
+  stackGroups: {
+    stackGroupName: string;
+    stackItems: {
+      name: string;
+      icon: string;
+    }[];
+  }[];
 }

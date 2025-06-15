@@ -10,7 +10,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 
-export default function Contact() {
+interface ContactProps {
+  email: string;
+  phone: string;
+  location: string;
+}
+
+export default function Contact({ email, phone, location }: ContactProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -89,9 +95,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-medium">Email</h4>
-                      <p className="text-sm text-muted-foreground">
-                        ayushmondal001@gmail.com
-                      </p>
+                      <p className="text-sm text-muted-foreground">{email}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -103,9 +107,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-medium">Phone</h4>
-                      <p className="text-sm text-muted-foreground">
-                        +91 9800994371
-                      </p>
+                      <p className="text-sm text-muted-foreground">{phone}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -118,7 +120,7 @@ export default function Contact() {
                     <div>
                       <h4 className="font-medium">Location</h4>
                       <p className="text-sm text-muted-foreground">
-                        Kolkata, West Bengal , IN
+                        {location}
                       </p>
                     </div>
                   </CardContent>

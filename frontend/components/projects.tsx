@@ -15,40 +15,20 @@ import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-const projects = [
-  {
-    id: 1,
-    title: "E-Commerce Platform",
-    description:
-      "A full-stack e-commerce platform with payment integration, user authentication, and admin dashboard.",
-    image: "/placeholder.svg?height=300&width=500",
-    tags: ["React", "Node.js", "MongoDB", "Stripe"],
-    liveUrl: "#",
-    githubUrl: "#",
-  },
-  {
-    id: 2,
-    title: "Task Management App",
-    description:
-      "A collaborative task management application with real-time updates and team workspaces.",
-    image: "/placeholder.svg?height=300&width=500",
-    tags: ["Next.js", "TypeScript", "Prisma", "Tailwind CSS"],
-    liveUrl: "#",
-    githubUrl: "#",
-  },
-  {
-    id: 3,
-    title: "AI Content Generator",
-    description:
-      "An AI-powered application that generates content based on user prompts and preferences.",
-    image: "/placeholder.svg?height=300&width=500",
-    tags: ["Python", "React", "OpenAI API", "FastAPI"],
-    liveUrl: "#",
-    githubUrl: "#",
-  },
-];
+interface ProjectProps {
+  projects: {
+    title: string;
+    description: string;
+    imageLink: string | null;
+    demoLink: string | null;
+    codeLink: string | null;
+    tags: string[] | null;
+  }[];
+}
 
-export default function Projects() {
+
+
+export default function Projects({ projects }: ProjectProps) {
   return (
     <div className="py-20 bg-muted/50">
       <div className="container px-4 sm:px-6">
@@ -70,7 +50,7 @@ export default function Projects() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, index) => (
             <motion.div
-              key={project.id}
+              key={project.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -79,7 +59,7 @@ export default function Projects() {
               <Card className="h-full flex flex-col overflow-hidden group">
                 <div className="relative overflow-hidden">
                   <Image
-                    src={project.image || "/placeholder.svg"}
+                    src={project.imageLink || "/placeholder.svg"}
                     alt={project.title}
                     width={500}
                     height={300}
@@ -92,7 +72,7 @@ export default function Projects() {
                 </CardHeader>
                 <CardContent className="flex-grow">
                   <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
+                    {project.tags?.map((tag) => (
                       <Badge key={tag} variant="secondary">
                         {tag}
                       </Badge>
@@ -102,7 +82,7 @@ export default function Projects() {
                 <CardFooter className="flex justify-between">
                   <Button variant="outline" size="sm" asChild>
                     <Link
-                      href={project.githubUrl}
+                      href={project.codeLink ?? ""}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -111,7 +91,7 @@ export default function Projects() {
                   </Button>
                   <Button size="sm" asChild>
                     <Link
-                      href={project.liveUrl}
+                      href={project.demoLink ?? ""}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

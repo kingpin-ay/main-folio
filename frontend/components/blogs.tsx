@@ -15,43 +15,18 @@ import { ArrowRight, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-const blogs = [
-  {
-    id: 1,
-    title: "Building Responsive UIs with Tailwind CSS",
-    description:
-      "Learn how to create beautiful, responsive user interfaces using Tailwind CSS utility classes.",
-    image: "/placeholder.svg?height=250&width=500",
-    date: "May 15, 2023",
-    category: "Web Development",
-    readTime: "5 min read",
-    url: "#",
-  },
-  {
-    id: 2,
-    title: "Getting Started with Next.js 14",
-    description:
-      "Explore the new features and improvements in Next.js 14 and how to leverage them in your projects.",
-    image: "/placeholder.svg?height=250&width=500",
-    date: "June 22, 2023",
-    category: "JavaScript",
-    readTime: "8 min read",
-    url: "#",
-  },
-  {
-    id: 3,
-    title: "The Power of Server Components in React",
-    description:
-      "Discover how React Server Components can improve performance and user experience in your applications.",
-    image: "/placeholder.svg?height=250&width=500",
-    date: "July 10, 2023",
-    category: "React",
-    readTime: "6 min read",
-    url: "#",
-  },
-];
+interface BlogProps {
+  blogs: {
+    title: string;
+    description: string;
+    blogText: string;
+    createdTime: Date;
+    estimateReadTime: string | null;
+    tag: string | null;
+  }[];
+}
 
-export default function Blogs() {
+export default function Blogs({ blogs }: BlogProps) {
   return (
     <div className="py-20">
       <div className="container px-4 sm:px-6">
@@ -73,7 +48,7 @@ export default function Blogs() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {blogs.map((blog, index) => (
             <motion.div
-              key={blog.id}
+              key={blog.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -82,7 +57,7 @@ export default function Blogs() {
               <Card className="h-full flex flex-col overflow-hidden group">
                 <div className="relative overflow-hidden">
                   <Image
-                    src={blog.image || "/placeholder.svg"}
+                    src={"/main-storage/main_stream_blog.jpeg"}
                     alt={blog.title}
                     width={500}
                     height={250}
@@ -91,13 +66,27 @@ export default function Blogs() {
                 </div>
                 <CardHeader>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                    <Badge variant="outline">{blog.category}</Badge>
-                    <div className="flex items-center">
+                    <div className="flex items-center gap-2 flex-wrap flex-1">
+                      {blog.tag &&
+                        blog.tag
+                          .split(",")
+                          .slice(0, 2)
+                          .map((tag) => (
+                            <Badge key={tag} variant="outline">
+                              {tag}
+                            </Badge>
+                          ))}
+                    </div>
+                    <div className="flex items-center flex-1">
                       <Calendar className="mr-1 h-3 w-3" />
-                      {blog.date}
+                      {new Intl.DateTimeFormat("en-IN", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }).format(new Date(blog.createdTime))}
                     </div>
                     <span>•</span>
-                    <span>{blog.readTime}</span>
+                    <span>{blog.estimateReadTime ?? "0"} min</span>
                   </div>
                   <CardTitle>{blog.title}</CardTitle>
                   <CardDescription>{blog.description}</CardDescription>
@@ -105,7 +94,7 @@ export default function Blogs() {
                 <CardContent className="flex-grow" />
                 <CardFooter>
                   <Button variant="ghost" className="ml-auto group" asChild>
-                    <Link href={blog.url}>
+                    <Link href={`#`}>
                       Read More
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>

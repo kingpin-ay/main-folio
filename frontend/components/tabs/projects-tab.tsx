@@ -21,67 +21,56 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Project } from "@/lib/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
+import { appClient } from "@/lib/client.ts/appClient";
 
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  image_link: string;
-  demo_link: string;
-  code_link: string;
-  tags: string[];
-}
+const handleSaveAll = async ({ projects }: { projects: Project[] }) => {
+  console.log("Saving all projects:", projects);
+  await appClient.updateUserProjects(projects);
+};
 
-export default function ProjectsTab() {
-  const [projects, setProjects] = useState<Project[]>([
-    {
-      id: "1",
-      title: "E-commerce Platform",
-      description:
-        "A full-stack e-commerce platform built with Next.js and Stripe integration.",
-      image_link: "https://example.com/ecommerce.jpg",
-      demo_link: "https://ecommerce-demo.example.com",
-      code_link: "https://github.com/johndoe/ecommerce",
-      tags: ["Next.js", "React", "Stripe", "Tailwind CSS"],
-    },
-    {
-      id: "2",
-      title: "Task Management App",
-      description:
-        "A task management application with drag-and-drop functionality.",
-      image_link: "https://example.com/taskapp.jpg",
-      demo_link: "https://taskapp-demo.example.com",
-      code_link: "https://github.com/johndoe/taskapp",
-      tags: ["React", "Redux", "Firebase"],
-    },
-  ]);
+export default function ProjectsTab({
+  projects_main,
+}: {
+  projects_main: Project[];
+}) {
+  const queryClient = useQueryClient();
+
+  const [projects, setProjects] = useState<Project[]>([...projects_main]);
 
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [newProject, setNewProject] = useState<Omit<Project, "id" | "tags">>({
     title: "",
     description: "",
-    image_link: "",
-    demo_link: "",
-    code_link: "",
+    imageLink: "",
+    demoLink: "",
+    codeLink: "",
   });
   const [newTag, setNewTag] = useState("");
 
   const handleAddProject = () => {
     if (!newProject.title) return;
 
-    const id = Math.random().toString(36).substring(2, 9);
+    const id = 0;
     setProjects([...projects, { ...newProject, id, tags: [] }]);
     setNewProject({
       title: "",
       description: "",
-      image_link: "",
-      demo_link: "",
-      code_link: "",
+      imageLink: "",
+      demoLink: "",
+      codeLink: "",
     });
   };
 
-  const handleDeleteProject = (id: string) => {
-    setProjects(projects.filter((project) => project.id !== id));
+  const handleDeleteProject = async (id: number) => {
+    if (id === 0) {
+      setProjects(projects.filter((project) => project.id !== id));
+    } else {
+      await appClient.deleteProject(id);
+      setProjects(projects.filter((project) => project.id !== id));
+    }
   };
 
   const handleEditProject = (project: Project) => {
@@ -119,11 +108,24 @@ export default function ProjectsTab() {
     });
   };
 
-  const handleSaveAll = () => {
-    console.log("Saving all projects:", projects);
-    // Implement API call to save all projects
-  };
+  const mutation = useMutation({
+    mutationFn: async (projects: Project[]) => {
+      await handleSaveAll({ projects });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/get/user/dashboard"] });
+      toast({
+        title: "Update: successful",
+        description: new Date().toLocaleString(),
+      });
+    },
+  });
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate(projects);
+  };
+  if (!projects_main) return <div>No projects found</div>;
   return (
     <div className="space-y-6">
       <div>
@@ -162,21 +164,23 @@ export default function ProjectsTab() {
                 {project.description}
               </p>
               <div className="flex flex-wrap gap-1 mt-2">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs bg-gray-800 px-2 py-1 rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {project.tags &&
+                  project.tags.length > 0 &&
+                  project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-xs bg-gray-800 px-2 py-1 rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
               </div>
             </CardContent>
             <CardFooter className="pt-2 text-xs text-gray-500">
               <div className="flex gap-4">
-                {project.demo_link && (
+                {project.demoLink && (
                   <a
-                    href={project.demo_link}
+                    href={project.demoLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-blue-400"
@@ -184,9 +188,9 @@ export default function ProjectsTab() {
                     Demo
                   </a>
                 )}
-                {project.code_link && (
+                {project.codeLink && (
                   <a
-                    href={project.code_link}
+                    href={project.codeLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-blue-400"
@@ -242,9 +246,9 @@ export default function ProjectsTab() {
                 <Label htmlFor="project-image">Image URL</Label>
                 <Input
                   id="project-image"
-                  value={newProject.image_link}
+                  value={newProject.imageLink}
                   onChange={(e) =>
-                    setNewProject({ ...newProject, image_link: e.target.value })
+                    setNewProject({ ...newProject, imageLink: e.target.value })
                   }
                   className="bg-gray-800 border-gray-700"
                 />
@@ -253,9 +257,9 @@ export default function ProjectsTab() {
                 <Label htmlFor="project-demo">Demo URL</Label>
                 <Input
                   id="project-demo"
-                  value={newProject.demo_link}
+                  value={newProject.demoLink}
                   onChange={(e) =>
-                    setNewProject({ ...newProject, demo_link: e.target.value })
+                    setNewProject({ ...newProject, demoLink: e.target.value })
                   }
                   className="bg-gray-800 border-gray-700"
                 />
@@ -264,9 +268,9 @@ export default function ProjectsTab() {
                 <Label htmlFor="project-code">Code URL</Label>
                 <Input
                   id="project-code"
-                  value={newProject.code_link}
+                  value={newProject.codeLink}
                   onChange={(e) =>
-                    setNewProject({ ...newProject, code_link: e.target.value })
+                    setNewProject({ ...newProject, codeLink: e.target.value })
                   }
                   className="bg-gray-800 border-gray-700"
                 />
@@ -329,11 +333,11 @@ export default function ProjectsTab() {
                 <Label htmlFor="edit-project-image">Image URL</Label>
                 <Input
                   id="edit-project-image"
-                  value={editingProject.image_link}
+                  value={editingProject.imageLink}
                   onChange={(e) =>
                     setEditingProject({
                       ...editingProject,
-                      image_link: e.target.value,
+                      imageLink: e.target.value,
                     })
                   }
                   className="bg-gray-800 border-gray-700"
@@ -343,11 +347,11 @@ export default function ProjectsTab() {
                 <Label htmlFor="edit-project-demo">Demo URL</Label>
                 <Input
                   id="edit-project-demo"
-                  value={editingProject.demo_link}
+                  value={editingProject.demoLink}
                   onChange={(e) =>
                     setEditingProject({
                       ...editingProject,
-                      demo_link: e.target.value,
+                      demoLink: e.target.value,
                     })
                   }
                   className="bg-gray-800 border-gray-700"
@@ -357,11 +361,11 @@ export default function ProjectsTab() {
                 <Label htmlFor="edit-project-code">Code URL</Label>
                 <Input
                   id="edit-project-code"
-                  value={editingProject.code_link}
+                  value={editingProject.codeLink}
                   onChange={(e) =>
                     setEditingProject({
                       ...editingProject,
-                      code_link: e.target.value,
+                      codeLink: e.target.value,
                     })
                   }
                   className="bg-gray-800 border-gray-700"
@@ -419,7 +423,7 @@ export default function ProjectsTab() {
         </DialogContent>
       </Dialog>
 
-      <Button onClick={handleSaveAll} className="ml-auto">
+      <Button onClick={handleSubmit} className="ml-auto">
         Save all projects
       </Button>
     </div>

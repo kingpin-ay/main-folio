@@ -68,3 +68,31 @@ export const stackItemValidatorSchema = z.object({
     image_link: z.string(),
   }),
 });
+
+export const projectsValidatorSchema = z.object({
+  projects: z.array(
+    z.object({
+      id: z.number(),
+      title: z.string(),
+      description: z.string(),
+      imageLink: z.string(),
+      demoLink: z.string(),
+      codeLink: z.string(),
+      tags: z.array(z.string()),
+    })
+  ),
+});
+
+export const blogsValidatorSchema = z.object({
+  blogs: z.array(
+    z.object({
+      id: z.number(),
+      title: z.string(),
+      description: z.string(),
+      blogText: z.string(),
+      estimateReadTime: z.number(),
+      tag: z.string(),
+      createdTime: z.string(),
+    })
+  ),
+});
