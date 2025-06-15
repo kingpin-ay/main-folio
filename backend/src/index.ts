@@ -18,8 +18,8 @@ app.use(
   "*",
   cors({
     origin: env.FRONTEND_URL,
-    allowHeaders: ['Content-Type', 'Authorization'],
-    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowHeaders: ["Content-Type", "Authorization"],
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
@@ -39,6 +39,6 @@ app.route("/profile", profile);
 
 
 
-serve({ port: 3001, fetch: app.fetch });
+// serve({ port: 3001, fetch: app.fetch });
 
 export const handler = handle(app);
