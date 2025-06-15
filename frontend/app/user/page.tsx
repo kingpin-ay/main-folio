@@ -25,7 +25,7 @@ export default function page() {
   );
 }
 
-export function CardDemo() {
+function CardDemo() {
   const [username, setUsername] = useState("");
   return (
     <Card className="w-full max-w-sm">

@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Product Requirements Document (PRD)
 
-## Getting Started
+## Project: Dynamic Portfolio Maker
 
-First, run the development server:
+### Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+A web application that allows users to create, customize, and share personal portfolios. Users can upload their data (bio, projects, blogs, social links, etc.), and the application generates a unique URL where their portfolio is displayed dynamically.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Goals
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Enable users to easily create and update their personal portfolio.
+- Allow users to upload their data (profile, projects, blogs, etc.).
+- Generate a unique, shareable URL for each user’s portfolio.
+- Display the user’s portfolio dynamically at the generated URL.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 1. User Data Upload
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Form-based UI** for users to input/upload:
+  - Personal information (name, bio, profile image, etc.)
+  - Social links (GitHub, LinkedIn, etc.)
+  - Projects (title, description, links, images)
+  - Blogs (title, content, links)
+  - Tech stack/groups
+- **Validation** for required fields and correct formats.
+- **API endpoint** to receive and store user data.
 
-## Deploy on Vercel
+### 2. Dynamic Portfolio Generation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Unique URL** for each user, e.g., `/user/[username]`.
+- **Server-side rendering** of portfolio pages using uploaded data.
+- **Components** for:
+  - Landing section (bio, name, social links)
+  - Projects section
+  - Blogs section
+  - About section (description, tech stack)
+  - Footer (contact/social links)
+- **Tabs** for tech stack, with default selection.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 3. Data Retrieval & Display
+
+- **API endpoint** to fetch user data by username.
+- **Dynamic routing** to render portfolio at `/user/[username]`.
+- **Error handling** for non-existent users (e.g., “User not found”).
+
+### 4. User Experience
+
+- **Responsive design** for mobile and desktop.
+- **Modern UI** with cards, tabs, and navigation.
+- **Loading and error states** for data fetching.
+
+---
+
+## User Stories
+
+1. **As a user,** I can fill out a form to upload my portfolio data.
+2. **As a user,** I receive a unique URL to view and share my portfolio.
+3. **As a visitor,** I can view a user’s portfolio by visiting their unique URL.
+4. **As a user,** I can update my portfolio data and see changes reflected at my URL.
+
+---
+
+## Technical Requirements
+
+- **Frontend:** React (Next.js), TypeScript, modern UI library (e.g., shadcn/ui).
+- **Backend:** API endpoints for data upload and retrieval.
+- **Database:** Store user profiles, projects, blogs, etc.
+- **Routing:** Dynamic routes for user portfolios.
+- **Validation:** Both client-side and server-side.
+- **Deployment:** Should be easily deployable (e.g., Vercel, Netlify).
+
+---
+
+## Out of Scope
+
+- User authentication (unless specified).
+- Advanced analytics or admin dashboards.
+- Payment or monetization features.
+
+---
+
+## Success Metrics
+
+- Users can successfully create and update portfolios.
+- Portfolios are accessible via unique URLs.
+- No major UI/UX bugs on mobile or desktop.
+- Fast load times for portfolio pages.
+
+---
+
+Let me know if you want this in a specific format (Markdown, .txt, etc.) or if you want to add/remove any features!
