@@ -36,9 +36,8 @@ export default function ProjectsTab({
 }: {
   projects_main: Project[];
 }) {
-  if (!projects_main) return <div>No projects found</div>;
-  console.log(projects_main);
   const queryClient = useQueryClient();
+
   const [projects, setProjects] = useState<Project[]>([...projects_main]);
 
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -126,7 +125,7 @@ export default function ProjectsTab({
     e.preventDefault();
     mutation.mutate(projects);
   };
-
+  if (!projects_main) return <div>No projects found</div>;
   return (
     <div className="space-y-6">
       <div>

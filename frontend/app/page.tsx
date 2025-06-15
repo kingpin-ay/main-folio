@@ -266,7 +266,7 @@ export default function LandingPage() {
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
             Join thousands of professionals who have already created their
-            dynamic portfolios. Start building yours today – it's free and takes
+            dynamic portfolios. Start building yours today – it&apos;s free and takes
             less than 10 minutes.
           </p>
           <Button

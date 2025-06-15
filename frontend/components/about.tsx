@@ -6,33 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { splitTextBySentenceAndWordCount } from "@/lib/utils";
 
-const techStack = {
-  frontend: [
-    { name: "React", icon: "/icon-svg/react.svg?height=60&width=60" },
-    { name: "Next.js", icon: "/icon-svg/next-js.svg?height=60&width=60" },
-    { name: "TypeScript", icon: "/icon-svg/typescript.svg?height=60&width=60" },
-    { name: "Tailwind CSS", icon: "/icon-svg/tailwind.svg?height=60&width=60" },
-    // {
-    //   name: "Motion",
-    //   icon: "https://framerusercontent.com/images/3aQX5dnH5Yqgsn98QXKF2ZXxIE.png",
-    // },
-  ],
-  backend: [
-    { name: "Node.js", icon: "/icon-svg/nodejs.svg?height=60&width=60" },
-    { name: "Express", icon: "/icon-svg/express.svg?height=60&width=60" },
-    { name: "MongoDB", icon: "/icon-svg/mongodb.svg?height=60&width=60" },
-    { name: "PostgreSQL", icon: "/icon-svg/postgresql.svg?height=60&width=60" },
-    { name: "GraphQL", icon: "/icon-svg/graphql.svg?height=60&width=60" },
-  ],
-  tools: [
-    { name: "Git", icon: "/icon-svg/git.svg?height=60&width=60" },
-    { name: "Docker", icon: "/icon-svg/docker.svg?height=60&width=60" },
-    { name: "VS Code", icon: "/icon-svg/vs-code.svg?height=60&width=60" },
-    { name: "AWS", icon: "/icon-svg/aws.svg?height=60&width=60" },
-    { name: "Github", icon: "/icon-svg/github.svg?height=60&width=60" },
-  ],
-};
-
 export default function About({
   shortDescription,
   description,

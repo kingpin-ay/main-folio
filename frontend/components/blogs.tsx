@@ -26,42 +26,6 @@ interface BlogProps {
   }[];
 }
 
-const blogs = [
-  {
-    id: 1,
-    title: "Building Responsive UIs with Tailwind CSS",
-    description:
-      "Learn how to create beautiful, responsive user interfaces using Tailwind CSS utility classes.",
-    image: "/placeholder.svg?height=250&width=500",
-    date: "May 15, 2023",
-    category: "Web Development",
-    readTime: "5 min read",
-    url: "#",
-  },
-  {
-    id: 2,
-    title: "Getting Started with Next.js 14",
-    description:
-      "Explore the new features and improvements in Next.js 14 and how to leverage them in your projects.",
-    image: "/placeholder.svg?height=250&width=500",
-    date: "June 22, 2023",
-    category: "JavaScript",
-    readTime: "8 min read",
-    url: "#",
-  },
-  {
-    id: 3,
-    title: "The Power of Server Components in React",
-    description:
-      "Discover how React Server Components can improve performance and user experience in your applications.",
-    image: "/placeholder.svg?height=250&width=500",
-    date: "July 10, 2023",
-    category: "React",
-    readTime: "6 min read",
-    url: "#",
-  },
-];
-
 export default function Blogs({ blogs }: BlogProps) {
   return (
     <div className="py-20">
