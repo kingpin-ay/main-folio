@@ -7,6 +7,7 @@ import {
   UserDashboard,
   Project,
   Blog,
+  UserProfileData,
 } from "../types";
 import { UserProfile } from "@/components/tabs/profile-tab";
 
@@ -420,6 +421,19 @@ class AppClient {
         {
           withCredentials: true,
         }
+      );
+      return this.responseObjectBuilder(response.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getUserData(
+    username: string
+  ): Promise<GetResponseType<UserProfileData>> {
+    try {
+      const response = await this.axiosInstance.get(
+        `${this.baseUrl}/profile/get/user/data/${username}`
       );
       return this.responseObjectBuilder(response.data);
     } catch (error) {

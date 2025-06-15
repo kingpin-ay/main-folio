@@ -446,3 +446,22 @@ export async function deleteBlog(id: number) {
     throw new Error("User not found");
   }
 }
+
+export async function getUserProfileData(username: string) {
+  try {
+    const user = await db.query.users.findFirst({
+      where: eq(users.userName, username),
+      columns: {
+        firstName: true,
+        lastName: true,
+        bio: true,
+        designation: true,
+        email: true,
+      },
+    });
+    console.log("user", user);
+    return user;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}

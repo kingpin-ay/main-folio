@@ -70,3 +70,12 @@ export interface User {
   userName: string;
   email: string;
 }
+
+export interface UserProfileData {
+  firstName: string;
+  lastName: string;
+  bio: string;
+  designation: string | null;
+  userName: string;
+  email: string;
+}
