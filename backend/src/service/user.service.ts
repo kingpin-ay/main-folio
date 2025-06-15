@@ -457,10 +457,33 @@ export async function getUserProfileData(username: string) {
         bio: true,
         designation: true,
         email: true,
+        id: true,
       },
     });
-    console.log("user", user);
-    return user;
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const contactDetailsData = await db.query.contactDetails.findMany({
+      where: eq(contactDetails.userId, user?.id),
+      columns: {
+        link: true,
+        linkType: true,
+      },
+    });
+
+    const mainUser: Omit<typeof user, "id"> = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      bio: user.bio,
+      designation: user.designation,
+      email: user.email,
+    };
+    return {
+      user: mainUser,
+      contactDetails: contactDetailsData,
+    };
   } catch (error) {
     throw new Error("User not found");
   }

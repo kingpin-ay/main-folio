@@ -21,7 +21,7 @@ const navItems = [
   { name: "Contact", href: "#contact" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ firstName }: { firstName: string }) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Handle scroll effect for navbar
@@ -43,7 +43,7 @@ export default function Navbar() {
     >
       <div className="container flex h-16 items-center justify-between">
         <Link href="#home" className="flex items-center space-x-2">
-          <span className="text-xl font-bold">Ayush</span>
+          <span className="text-xl font-bold">{firstName}</span>
         </Link>
 
         {/* Desktop Navigation */}

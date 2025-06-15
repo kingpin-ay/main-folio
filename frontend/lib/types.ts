@@ -72,10 +72,16 @@ export interface User {
 }
 
 export interface UserProfileData {
-  firstName: string;
-  lastName: string;
-  bio: string;
-  designation: string | null;
-  userName: string;
-  email: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    bio: string;
+    designation: string | null;
+    userName: string;
+    email: string;
+  };
+  contactDetails: {
+    link: string;
+    linkType: "GITHUB" | "YOUTUBE" | "X" | "MAIL" | "LINKEDLN";
+  }[];
 }
