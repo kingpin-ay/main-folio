@@ -1,3 +1,6 @@
+import About from "@/components/about";
+import Blogs from "@/components/blogs";
+import Contact from "@/components/contact";
 import Footer from "@/components/footer";
 import Landing from "@/components/landing";
 import Navbar from "@/components/navbar";
@@ -33,7 +36,26 @@ export default async function page({ params }: { params: Promise<Params> }) {
         />
       </section>
       <section id="projects" className="scroll-mt-20">
-        <Projects />
+        <Projects projects={profileData.projects} />
+      </section>
+      <section id="blogs" className="scroll-mt-20">
+        <Blogs blogs={profileData.blogs} />
+      </section>
+      <section id="about" className="scroll-mt-20">
+        <About
+          shortDescription={profileData.userAbout?.shortDescription ?? ""}
+          description={profileData.userAbout?.description ?? ""}
+          imageLink={profileData.userAbout?.imageLink ?? ""}
+          fullName={`${profileData.user.firstName} ${profileData.user.lastName}`}
+          stackGroups={profileData.stackGroups}
+        />
+      </section>
+      <section id="contact" className="scroll-mt-20">
+        <Contact
+          email={profileData.userAbout?.email ?? ""}
+          phone={profileData.userAbout?.phoneNumber ?? ""}
+          location={profileData.userAbout?.location ?? ""}
+        />
       </section>
       <Footer
         fullName={`${profileData.user.firstName} ${profileData.user.lastName}`}

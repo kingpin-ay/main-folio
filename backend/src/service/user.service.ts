@@ -473,6 +473,71 @@ export async function getUserProfileData(username: string) {
       },
     });
 
+    const projectsData = await db.query.projects.findMany({
+      where: eq(projects.userId, user?.id),
+      columns: {
+        title: true,
+        description: true,
+        imageLink: true,
+        demoLink: true,
+        codeLink: true,
+        tags: true,
+      },
+    });
+
+    const userAboutData = await db.query.userAbout.findFirst({
+      where: eq(userAbout.userId, user?.id),
+      columns: {
+        shortDescription: true,
+        description: true,
+        imageLink: true,
+        email: true,
+        phoneNumber: true,
+        location: true,
+      },
+    });
+
+    const blogsData = await db.query.blogs.findMany({
+      where: eq(blogs.userId, user?.id),
+      columns: {
+        title: true,
+        description: true,
+        blogText: true,
+        estimateReadTime: true,
+        tag: true,
+        createdTime: true,
+      },
+    });
+
+    const result = await db
+      .select({
+        stackGroupName: stackGroups.name,
+        stackItemName: stackItems.name,
+        stackItemIcon: stackItems.imageLink,
+        stackGroupId: stackGroups.id,
+      })
+      .from(stackGroups)
+      .leftJoin(stackItems, eq(stackGroups.id, stackItems.stackGroupId));
+
+    const grouped = result.reduce((acc, row) => {
+      const existing = acc.find((g) => g.stackGroupName === row.stackGroupName);
+      const item = {
+        name: row.stackItemName ?? "",
+        icon: row.stackItemIcon ?? "",
+      };
+
+      if (existing) {
+        existing.stackItems.push(item);
+      } else {
+        acc.push({
+          stackGroupName: row.stackGroupName,
+          stackItems: [item],
+        });
+      }
+
+      return acc;
+    }, [] as { stackGroupName: string; stackItems: { name: string; icon: string }[] }[]);
+
     const mainUser: Omit<typeof user, "id"> = {
       firstName: user.firstName,
       lastName: user.lastName,
@@ -483,6 +548,10 @@ export async function getUserProfileData(username: string) {
     return {
       user: mainUser,
       contactDetails: contactDetailsData,
+      projects: projectsData,
+      userAbout: userAboutData,
+      blogs: blogsData,
+      stackGroups: grouped,
     };
   } catch (error) {
     throw new Error("User not found");

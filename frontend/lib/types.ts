@@ -84,4 +84,37 @@ export interface UserProfileData {
     link: string;
     linkType: "GITHUB" | "YOUTUBE" | "X" | "MAIL" | "LINKEDLN";
   }[];
+  projects: {
+    title: string;
+    description: string;
+    imageLink: string | null;
+    demoLink: string | null;
+    codeLink: string | null;
+    tags: string[] | null;
+  }[];
+  userAbout:
+    | {
+        email: string | null;
+        description: string;
+        imageLink: string;
+        shortDescription: string | null;
+        phoneNumber: string | null;
+        location: string | null;
+      }
+    | undefined;
+  blogs: {
+    title: string;
+    description: string;
+    blogText: string;
+    createdTime: Date;
+    estimateReadTime: string | null;
+    tag: string | null;
+  }[];
+  stackGroups: {
+    stackGroupName: string;
+    stackItems: {
+      name: string;
+      icon: string;
+    }[];
+  }[];
 }
