@@ -462,7 +462,7 @@ export async function getUserProfileData(username: string) {
     });
 
     if (!user) {
-      throw new Error("User not found");
+      return null;
     }
 
     const contactDetailsData = await db.query.contactDetails.findMany({
@@ -554,6 +554,6 @@ export async function getUserProfileData(username: string) {
       stackGroups: grouped,
     };
   } catch (error) {
-    throw new Error("User not found");
+    return null;
   }
 }
