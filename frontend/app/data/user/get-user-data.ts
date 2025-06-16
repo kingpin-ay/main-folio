@@ -118,7 +118,7 @@ export async function getUserData(username: string) {
       stackGroups: grouped,
     };
   } catch (error) {
-    console.error("Error fetching user data");
+    console.error("Error fetching user data", error);
     notFound();
   }
 }
