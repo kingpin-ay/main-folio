@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const envSchema = z.object({
-  DATABASE_URL: z.string(),
-  NEXT_PUBLIC_BASE_URL: z.string(),
+  DATABASE_URL: z.string().default(""),
+  NEXT_PUBLIC_BASE_URL: z.string().default(""),
   DEV_ENV: z.enum(["DEVELOPMENT", "PRODUCTION"]).default("PRODUCTION"),
 });
 
