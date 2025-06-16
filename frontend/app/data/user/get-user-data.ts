@@ -9,6 +9,7 @@ import {
   userAbout,
   blogs,
 } from "@/src/db/schema";
+import { notFound } from "next/navigation";
 
 export async function getUserData(username: string) {
   try {
@@ -25,7 +26,7 @@ export async function getUserData(username: string) {
     });
 
     if (!user) {
-      return null;
+      notFound();
     }
 
     const contactDetailsData = await db.query.contactDetails.findMany({
@@ -117,6 +118,7 @@ export async function getUserData(username: string) {
       stackGroups: grouped,
     };
   } catch (error) {
-    return null;
+    console.error("Error fetching user data");
+    notFound();
   }
 }
