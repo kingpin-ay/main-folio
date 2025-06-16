@@ -36,6 +36,10 @@ const nextConfig = {
       },
     ];
   },
+  env: {
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    DATABASE_URL: process.env.DATABASE_URL,
+  },
 };
 
 module.exports = nextConfig;
