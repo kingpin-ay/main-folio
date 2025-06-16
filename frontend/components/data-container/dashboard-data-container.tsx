@@ -1,6 +1,6 @@
 "use client";
 
-import { appClient } from "@/lib/client.ts/appClient";
+import { appClient } from "@/lib/client/appClient";
 import { UserDashboard } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { StateHandler } from "@/components/ui/state-handler";

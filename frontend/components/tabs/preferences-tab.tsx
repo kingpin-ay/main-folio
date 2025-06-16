@@ -16,7 +16,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { StackGroup, StackItem } from "@/lib/types";
-import { appClient } from "@/lib/client.ts/appClient";
+import { appClient } from "@/lib/client/appClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 

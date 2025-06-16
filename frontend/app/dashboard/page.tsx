@@ -2,7 +2,7 @@
 
 import { DashboardDataContainer } from "@/components/data-container/dashboard-data-container";
 import UserSettings from "@/components/user-settings";
-import { appClient } from "@/lib/client.ts/appClient";
+import { appClient } from "@/lib/client/appClient";
 import { useRouter } from "next/navigation";
 import React from "react";
 

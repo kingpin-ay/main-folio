@@ -24,7 +24,7 @@ import {
 import { Project } from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
-import { appClient } from "@/lib/client.ts/appClient";
+import { appClient } from "@/lib/client/appClient";
 
 const handleSaveAll = async ({ projects }: { projects: Project[] }) => {
   console.log("Saving all projects:", projects);
