@@ -22,7 +22,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Blog } from "@/lib/types";
-import { appClient } from "@/lib/client.ts/appClient";
+import { appClient } from "@/lib/client/appClient";
 import { toast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

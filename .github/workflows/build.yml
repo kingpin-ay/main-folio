@@ -29,6 +29,9 @@ jobs:
         run: pnpm install
 
       - name: Run Build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
         run: pnpm run build
 
   backend-build:
@@ -44,7 +47,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-      
+
       - name: Install pnpm
         run: npm install --global corepack@latest
 
