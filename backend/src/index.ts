@@ -1,23 +1,18 @@
+import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { handle, LambdaEvent } from "hono/aws-lambda";
 import { cors } from "hono/cors";
-// import { serve } from "@hono/node-server";
-import users from "./controller/users.controller";
-import auth from "./controller/auth.controller";
-import profile from "./controller/profile.controller";
 import { logger } from "hono/logger";
-import { env } from "../lib/helper/env";
+import users from "./controller/users.controller.js";
+import auth from "./controller/auth.controller.js";
+import profile from "./controller/profile.controller.js";
+import { env } from "./lib/helper/env.js";
 
-type Bindings = {
-  event: LambdaEvent;
-};
-
-const app = new Hono<{ Bindings: Bindings }>().basePath("/default");
+const app = new Hono().basePath("/default");
 
 app.use(
   "*",
   cors({
-    origin: env.FRONTEND_URL,
+    origin: env.FRONTEND_URL || "localhost",
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
@@ -36,9 +31,12 @@ app.route("/auth", auth);
 app.route("/users", users);
 
 app.route("/profile", profile);
-
-
-
-// serve({ port: 3001, fetch: app.fetch });
-
-export const handler = handle(app);
+serve(
+  {
+    fetch: app.fetch,
+    port: 3000,
+  },
+  (info: { port: any }) => {
+    console.log(`Server is running on http://localhost:${info.port}`);
+  }
+);

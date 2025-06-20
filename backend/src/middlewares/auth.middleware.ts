@@ -1,8 +1,11 @@
-import { Context, Next } from "hono";
+import type { Context, Next } from "hono";
 import { getSignedCookie } from "hono/cookie";
 import { verify } from "hono/jwt";
-import { env } from "../../lib/helper/env";
-import { Variables, UserPayload } from "../../lib/types/user.type.controller";
+import { env } from "../lib/helper/env.js";
+import type {
+  Variables,
+  UserPayload,
+} from "../lib/types/user.type.controller.js";
 
 export const authMiddleware = async (
   c: Context<{ Variables: Variables }>,

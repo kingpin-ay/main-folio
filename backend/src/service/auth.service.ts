@@ -1,13 +1,13 @@
-import { Context } from "hono";
-import { ParsedFormValue } from "hono/types";
-import { db } from "../db";
+import type { Context } from "hono";
+import type { ParsedFormValue } from "hono/types";
+import { db } from "../db/index.js";
 import { eq } from "drizzle-orm";
-import { users } from "../db/schema";
-import { hashPassword, matchPassword } from "../../lib/helper/security";
+import { users } from "../db/schema.js";
+import { hashPassword, matchPassword } from "../lib/helper/security.js";
 import { sign } from "hono/jwt";
-import { env } from "../../lib/helper/env";
+import { env } from "../lib/helper/env.js";
 import { deleteCookie, setSignedCookie } from "hono/cookie";
-import { cookieConfig } from "../../lib/helper/cookie";
+import { cookieConfig } from "../lib/helper/cookie.js";
 
 export async function login(
   c: Context<

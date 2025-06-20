@@ -4,7 +4,7 @@ export default function Loading({
   message?: string;
 }) {
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-background dark:to-slate-800 flex items-center justify-center z-50">
       <div className="text-center space-y-8">
         {/* Main loading spinner */}
         {/* <div className="relative flex items-center justify-center">

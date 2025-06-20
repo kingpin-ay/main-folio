@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { Variables } from "hono/types";
-import { getUserProfileData } from "../service/user.service";
+import type { Variables } from "../lib/types/user.type.controller.js";
+import { getUserProfileData } from "../service/user.service.js";
 
 const app = new Hono<{ Variables: Variables }>();
 

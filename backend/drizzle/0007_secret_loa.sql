@@ -1,1 +1,0 @@
-ALTER TABLE "blog" ALTER COLUMN "created_time" SET DEFAULT now();
