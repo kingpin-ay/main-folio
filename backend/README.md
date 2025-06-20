@@ -1,10 +1,8 @@
 ```
 npm install
-npm run deploy
+npm run dev
 ```
 
-## generate JWT secret
-
 ```
-node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+open http://localhost:3000
 ```

@@ -1,5 +1,5 @@
 import { randomBytes, scryptSync } from "crypto";
-import { env } from "./env";
+import { env } from "./env.js";
 
 const encryptPassword = (password: string, salt: string) => {
   return scryptSync(password, salt, 32).toString("hex");

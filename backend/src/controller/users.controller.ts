@@ -1,7 +1,7 @@
 // user.ts
 import { Hono } from "hono";
-import { authMiddleware } from "../middlewares/auth.middleware";
-import { Variables } from "../../lib/types/user.type.controller";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import type { Variables } from "../lib/types/user.type.controller.js";
 import {
   addStackGroupItem,
   deleteSingleStackGroupItem,
@@ -16,7 +16,7 @@ import {
   deleteProject,
   updateUserBlogs,
   deleteBlog,
-} from "../service/user.service";
+} from "../service/user.service.js";
 import { validator } from "hono/validator";
 import {
   aboutTabValidator,
@@ -26,7 +26,7 @@ import {
   stackGroupValidator,
   stackItemValidator,
   blogsValidator,
-} from "../../lib/validator/dashboard.validator";
+} from "../lib/validator/dashboard.validator.js";
 
 const app = new Hono<{ Variables: Variables }>();
 

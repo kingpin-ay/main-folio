@@ -1,4 +1,4 @@
-import { Context } from "hono";
+import type { Context } from "hono";
 import {
   aboutTabValidatorSchema,
   blogsValidatorSchema,
@@ -7,7 +7,7 @@ import {
   projectsValidatorSchema,
   stackGroupValidatorSchema,
   stackItemValidatorSchema,
-} from "../validation-schema/user.schema";
+} from "../validation-schema/user.schema.js";
 
 export const profileTabValidator = (
   value: any,

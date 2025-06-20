@@ -1,6 +1,6 @@
-import { loginSchema, signUpSchema } from "../validation-schema/user.schema";
-import { ParsedFormValue } from "hono/types";
-import { Context } from "hono";
+import { loginSchema, signUpSchema } from "../validation-schema/user.schema.js";
+import type { ParsedFormValue } from "hono/types";
+import type { Context } from "hono";
 
 export function loginValidator(
   value: Record<string, ParsedFormValue | ParsedFormValue[]>,

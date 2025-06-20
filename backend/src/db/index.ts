@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import * as schema from "./schema";
-import { env } from "../../lib/helper/env";
+import * as schema from "./schema.js";
+import { env } from "../lib/helper/env.js";
 
 if (!env.DATABASE_URL) {
   throw new Error(

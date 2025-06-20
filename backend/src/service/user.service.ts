@@ -1,4 +1,4 @@
-import { db } from "../db";
+import { db } from "../db/index.js";
 import {
   contactDetails,
   projects,
@@ -7,14 +7,14 @@ import {
   userAbout,
   users,
   blogs,
-} from "../db/schema";
+} from "../db/schema.js";
 import { and, eq, inArray } from "drizzle-orm";
-import { UserPayload } from "../../lib/types/user.type.controller";
+import type { UserPayload } from "../lib/types/user.type.controller.js";
 import {
   profileTabValidatorSchema,
   aboutTabValidatorSchema,
   contactTabValidatorSchema,
-} from "../../lib/validation-schema/user.schema";
+} from "../lib/validation-schema/user.schema.js";
 import { z } from "zod";
 
 export type UserProfile = z.infer<typeof profileTabValidatorSchema>;
@@ -98,7 +98,7 @@ export async function getUserDashboard(userPayload: UserPayload) {
       description: true,
     },
   });
-  const stackGroupIds = stackGroupsData.map((group) => group.id);
+  const stackGroupIds = stackGroupsData.map((group: { id: any }) => group.id);
 
   const stackItemsData = await db.query.stackItems.findMany({
     where: inArray(stackItems.stackGroupId, stackGroupIds),
@@ -137,18 +137,20 @@ export async function getUserDashboard(userPayload: UserPayload) {
   });
 
   // Arrange stackGroups with their items (fix description type)
-  const stackGroupsMain: StackGroup[] = stackGroupsData.map((group) => ({
-    id: group.id,
-    name: group.name,
-    description: group.description ?? "",
-    items: stackItemsData
-      .filter((item) => item.stackGroupId === group.id)
-      .map((item) => ({
-        id: item.id,
-        name: item.name,
-        image_link: item.imageLink,
-      })),
-  }));
+  const stackGroupsMain: StackGroup[] = stackGroupsData.map(
+    (group: { id: any; name: any; description: any }) => ({
+      id: group.id,
+      name: group.name,
+      description: group.description ?? "",
+      items: stackItemsData
+        .filter((item: { stackGroupId: any }) => item.stackGroupId === group.id)
+        .map((item: { id: any; name: any; imageLink: any }) => ({
+          id: item.id,
+          name: item.name,
+          image_link: item.imageLink,
+        })),
+    })
+  );
 
   return {
     user: user,

@@ -1,5 +1,5 @@
-import { CookieOptions } from "hono/utils/cookie";
-import { env } from "./env";
+import type { CookieOptions } from "hono/utils/cookie";
+import { env } from "./env.js";
 
 export function cookieConfig(
   maxAgeHour: number,
