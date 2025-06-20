@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { ContactDetails } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
-import { appClient } from "@/lib/client.ts/appClient";
+import { appClient } from "@/lib/client/appClient";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const handleSaveAll = async (contacts: ContactDetails[]) => {
