@@ -34,7 +34,7 @@ app.route("/profile", profile);
 serve(
   {
     fetch: app.fetch,
-    port: 3000,
+    port: parseInt(env.PORT),
   },
   (info: { port: any }) => {
     console.log(`Server is running on http://localhost:${info.port}`);

@@ -2,6 +2,7 @@ import { z } from "zod"
 
 export const envSchema = z.object({
   DATABASE_URL: z.string(),
+  PORT: z.string().default("3000"),
   SALT_ROUND: z
     .string()
     .transform((val) => parseInt(val))
